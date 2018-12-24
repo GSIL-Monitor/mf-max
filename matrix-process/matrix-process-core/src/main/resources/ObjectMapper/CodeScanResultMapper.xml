@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.process.core.dao.CodeScanResultDao">
+
+	<select id="getCodeScanResult" parameterType="java.lang.Integer" resultType="java.util.Map">
+			SELECT id,code_scan_time,blocker,critical,major,minor,info,status,code_scan_result_url FROM code_scan_result
+			WHERE project_task_id = #{id,jdbcType=INTEGER} ORDER BY update_time DESC LIMIT 1;
+	</select>
+
+	<select id="getMasterCodeScanResult" parameterType="java.lang.Integer" resultType="java.util.Map">
+			SELECT blocker,critical,major,minor,info FROM code_scan_result
+			WHERE project_task_id = #{id,jdbcType=INTEGER} AND is_master =1 ORDER BY update_time DESC LIMIT 1;
+	</select>
+
+	<update id="updateCodeScanResultStatus" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanResult">
+		UPDATE code_scan_result
+		<set>
+			<if test="projectTaskId != null">project_task_id = #{projectTaskId,jdbcType=INTEGER},</if>
+			<if test="gitAddress != null">git_address = #{gitAddress,jdbcType=VARCHAR},</if>
+			<if test="codeBranch != null">code_branch = #{codeBranch,jdbcType=VARCHAR},</if>
+			<if test="codeScanTime != null">code_scan_time = #{codeScanTime,jdbcType=TIMESTAMP},</if>
+			<if test="blocker != null">blocker = #{blocker,jdbcType=INTEGER},</if>
+			<if test="critical != null">critical = #{critical,jdbcType=INTEGER},</if>
+			<if test="major != null">major = #{major,jdbcType=INTEGER},</if>
+			<if test="minor != null">minor = #{minor,jdbcType=INTEGER},</if>
+			<if test="info != null">info = #{info,jdbcType=INTEGER},</if>
+			<if test="status!=null">status = #{status,jdbcType=INTEGER},</if>
+			<if test="isMaster!=null">is_master = #{isMaster,jdbcType=INTEGER},</if>
+			<if test="codeScanResultUrl != null">code_scan_result_url = #{codeScanResultUrl,jdbcType=VARCHAR},</if>
+			<if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

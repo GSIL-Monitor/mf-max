@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>静态代码检查任务详情报告</title>
+    <script th:src="@{/echarts.min.js}"></script>
+    <script th:src="@{/jQuery.js}"></script>
+    <!--<script src="../static/echarts.min.js"></script>-->
+    <style>
+        #all {
+            margin: 0px auto;
+            width: 1300px; /* 必须制定宽度 */
+            height: 275px;
+        }
+
+        #detail {
+            margin: 0px auto;
+            width: 1300px; /* 必须制定宽度 */
+            height: 5px;
+        }
+
+        #foot {
+            width: 1300px; /* 必须制定宽度 */
+            height: 30px;
+            margin-top: 30px;
+        }
+
+        .result-table th,
+        .result-table td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="main" style="width: 600px;height:400px;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+    option = {
+        title: {
+            text: '折线图堆叠'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['周一','周二','周三','周四','周五','周六','周日']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name:'邮件营销',
+                type:'line',
+                stack: '总量',
+                data:[120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+                name:'联盟广告',
+                type:'line',
+                stack: '总量',
+                data:[220, 182, 191, 234, 290, 330, 310]
+            },
+            {
+                name:'视频广告',
+                type:'line',
+                stack: '总量',
+                data:[150, 232, 201, 154, 190, 330, 410]
+            },
+            {
+                name:'直接访问',
+                type:'line',
+                stack: '总量',
+                data:[320, 332, 301, 334, 390, 330, 320]
+            },
+            {
+                name:'搜索引擎',
+                type:'line',
+                stack: '总量',
+                data:[820, 932, 901, 934, 1290, 1330, 1320]
+            }
+        ]
+    };
+
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+<div th:object="${job}">
+    您好:</br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;以下是您<span th:text="*{jobName}"/>静态代码检查任务详情报告:</br>
+</div>
+<div id="all">
+
+    <div th:object="${job}">
+        <span>任务ID:</span>
+        <span th:text="*{id}"/>&nbsp;&nbsp;&nbsp;
+        <span>任务名称:</span>
+        <span th:text="*{jobName}"/>&nbsp;&nbsp;&nbsp;
+        <span>应用名称:</span>
+        <span th:text="*{appCode}"/>&nbsp;&nbsp;&nbsp;
+        <span>检查分支:</span>
+        <span th:text="*{codeBranch}"/>&nbsp;&nbsp;&nbsp;
+        <span>最近检查时间:</span>
+        <span th:text="*{scanTime}"/>&nbsp;&nbsp;&nbsp;
+        <span>运行人:</span>
+        <span th:text="*{runUserName}"/>&nbsp;&nbsp;&nbsp;
+        <span>检查代码行数:</span>
+        <span th:text="*{codeLine}"/>&nbsp;&nbsp;&nbsp;
+        <span>代码重复率:</span>
+        <span th:text="*{duplicateLine}"/>
+    </div>
+    <div>
+        <span>最近10天扫描结果:</span>
+    </div>
+    <div>
+        <table align="left" class="result-table">
+            <tr>
+                <td>ID</td>
+                <th>致命缺陷</th>
+                <th>严重缺陷</th>
+                <th>一般缺陷</th>
+                <th>检查时间</th>
+            </tr>
+            <tr th:each="record : ${records}">
+                <td th:text="${record.id}"/>
+                <td th:text="${record.blocker}"/>
+                <td th:text="${record.critical}"/>
+                <td th:text="${record.major}"/>
+                <td th:text="${record.scanTime}"/>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="detail">
+    若您想查看更多静态代码检查详情，请查看:
+    <a href="#" th:href="@{ 'http://max-staging.missfresh.net/codeScan/detail?id='+${id} }">更多详情</a>
+</div>
+<img src="http://max-staging.missfresh.net">
+<div id="foot">
+    李娜 | 基础平台部 能效组</br>
+    <div>
+        Tel:&nbsp;17801068559
+    </div>
+    <div>
+        E-mail:&nbsp;lina02@missfresh.cn
+    </div>
+    <div>
+        Address:&nbsp;北京市朝阳区酒仙桥路52号东方科技园
+    </div>
+</div>
+</body>
+</html>

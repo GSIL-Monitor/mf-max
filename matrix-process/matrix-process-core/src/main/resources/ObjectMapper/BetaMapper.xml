@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.process.core.dao.BetaDao">
+
+	<!--通用beta对应ip表表映射-->
+	<resultMap id="BaseResultMap" type="com.mryx.matrix.process.domain.BetaDTO" >
+		<id property="id" column="id" jdbcType="INTEGER" />
+		<result property="env" column="env" jdbcType="VARCHAR" />
+		<result property="ip" column="ip" jdbcType="VARCHAR" />
+		<result property="createUser" column="create_user" jdbcType="VARCHAR" />
+		<result property="updateUser" column="update_user" jdbcType="VARCHAR" />
+		<result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+		<result property="delFlag" column="del_flag" jdbcType="INTEGER" />
+		<result property="projectId" column="project_id" jdbcType="INTEGER" />
+		<result property="projectName" column="project_name" jdbcType="VARCHAR" />
+		<result property="canUse" column="can_use" jdbcType="INTEGER" />
+	</resultMap>
+
+
+	<!-- 通用查询结果集合-->
+	<sql id="Base_Column_List">
+	id,	env, ip, create_user, update_user, create_time,	update_time, del_flag, project_id, project_name, can_use
+	</sql>
+
+	<!-- 公共查询条件-->
+	<!-- collection foreach DATE_FORMAT(create_time,'%Y-%m-%d') like CONCAT('%',#{goodsNo,jdbcType=VARCHAR},'%') -->
+	<!-- <![CDATA[<=]]> date_format(FROM_UNIXTIME(expire_time),'%Y-%c-%d %h:%i:%s') as showExpireTime-->
+
+	<sql id="conditions">
+		<if test="id != null "> and id = #{id,jdbcType=INTEGER} </if>
+		<if test="env != null and env != '' "> and env = #{env,jdbcType=VARCHAR} </if>
+		<if test="ip != null and ip != '' "> and ip = #{ip,jdbcType=VARCHAR} </if>
+		<if test="createUser != null and createUser != '' "> and create_user = #{createUser,jdbcType=VARCHAR} </if>
+		<if test="updateUser != null and updateUser != '' "> and update_user = #{updateUser,jdbcType=VARCHAR} </if>
+		<if test="createTime != null and createTime != '' "> and create_time = #{createTime,jdbcType=TIMESTAMP} </if>
+		<if test="updateTime != null and updateTime != '' "> and update_time = #{updateTime,jdbcType=TIMESTAMP} </if>
+		<if test="delFlag != null "> and del_flag = #{delFlag,jdbcType=INTEGER} </if>
+		<if test="projectId != null"> and project_id = #{projectId,jdbcType=INTEGER} </if>
+		<if test="projectName != null and projectName != ''"> and project_name = #{projectName,jdbcType=INTEGER} </if>
+		<if test="canUse != null"> and can_use = #{canUse} </if>
+	</sql>
+
+	<sql id="listConditions">
+		<if test="ip != null and ip != ''"> and ip like CONCAT('%',#{ip,jdbcType=INTEGER} ,'%')</if>
+		<if test="env != null and env != ''"> and env like CONCAT('%',#{env,jdbcType=VARCHAR} ,'%') </if>
+		<if test="delFlag != null "> and del_flag = #{delFlag,jdbcType=INTEGER} </if>
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM beta
+		 WHERE id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 添加 （匹配有值的字段,不建议使用）-->
+	<insert id="insert" parameterType="com.mryx.matrix.process.domain.BetaDTO">
+		 INSERT INTO beta
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null"> id,</if>
+			<if test="env != null"> env,</if>
+			<if test="ip != null"> ip,</if>
+			<if test="createUser != null"> create_user,</if>
+			<if test="updateUser != null"> update_user,</if>
+			<if test="createTime != null"> create_time,</if>
+			<if test="updateTime != null"> update_time,</if>
+			<if test="delFlag != null"> del_flag,</if>
+			<if test="projectId != null"> project_id,</if>
+			<if test="projectName !=null"> project_name,</if>
+			<if test="canUse !=null"> can_use,</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">#{id,jdbcType=INTEGER},</if>
+			<if test="env!=null">#{env,jdbcType=VARCHAR},</if>
+			<if test="ip!=null">#{ip,jdbcType=VARCHAR},</if>
+			<if test="createUser!=null">#{createUser,jdbcType=VARCHAR},</if>
+			<if test="updateUser!=null">#{updateUser,jdbcType=VARCHAR},</if>
+			<if test="createTime!=null">#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime!=null">#{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag!=null">#{delFlag,jdbcType=INTEGER},</if>
+			<if test="projectId !=null">#{projectId,jdbcType=INTEGER},</if>
+			<if test="projectName !=null">#{projectName,jdbcType=VARCHAR},</if>
+			<if test="canUse !=null">#{canUse,jdbcType=INTEGER}</if>
+		 </trim>
+	</insert>
+
+	<!-- 根据主键修改输入的值-->
+	<update id="updateById" parameterType="com.mryx.matrix.process.domain.BetaDTO">
+		 UPDATE beta
+ 		 <set> 
+			<if test="env != null">env = #{env,jdbcType=VARCHAR},</if>
+			<if test="ip != null">ip = #{ip,jdbcType=VARCHAR},</if>
+			<if test="createUser != null">create_user = #{createUser,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">update_user = #{updateUser,jdbcType=VARCHAR},</if>
+			<if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null">del_flag = #{delFlag,jdbcType=INTEGER},</if>
+            <if test="projectId != null">project_id = #{projectId,jdbcType=INTEGER},</if>
+            <if test="projectId == null">project_id = 0 ,</if>
+            <if test="projectName != null">project_name = #{projectName,jdbcType=INTEGER},</if>
+            <if test="projectName == null">project_name = '' ,</if>
+			<if test="canUse !=null">can_use = #{canUse,jdbcType=INTEGER},</if>
+ 		 </set>
+		 WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+
+    <!-- 根据主键修改输入的值-->
+    <update id="deleteById" parameterType="com.mryx.matrix.process.domain.BetaDTO">
+        UPDATE beta
+        <set>
+            del_flag = 0
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+	<!-- 分页查询 -->
+	<select id="listPage" resultMap="BaseResultMap" parameterType="java.util.HashMap" useCache="false">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM beta
+		 WHERE 1=1
+		 <include refid="listConditions" />
+		 ORDER BY id DESC
+		 limit #{startOfPage},#{pageSize}
+	</select>
+
+	<!-- 分页查询总数 -->
+	<select id="pageTotal" resultType="int" parameterType="java.util.HashMap" useCache="false">
+		 SELECT
+		 count(*) 
+		 FROM beta
+		 WHERE 1=1
+		 <include refid="listConditions" />
+	</select>
+
+    <!-- 可使用分页查询 -->
+    <select id="listPageCanUse" resultMap="BaseResultMap" parameterType="java.util.HashMap" useCache="false">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM beta
+        WHERE (can_use = 1 <if test="projectId != null "> OR project_id = #{projectId,jdbcType=INTEGER} </if>) AND del_flag = 1
+        ORDER BY id DESC
+        limit #{startOfPage},#{pageSize}
+    </select>
+
+    <!-- 可使用分页查询总数 -->
+    <select id="pageTotalCanUse" resultType="int" parameterType="java.util.HashMap" useCache="false">
+        SELECT
+        count(*)
+        FROM beta
+		WHERE (can_use = 1 <if test="projectId != null "> OR project_id = #{projectId,jdbcType=INTEGER} </if>) AND del_flag =1
+    </select>
+
+    <!-- 按条件查询列表 -->
+	<select id="listByCondition" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM beta
+		 WHERE 1=1
+		 <include refid="conditions" />
+	</select>
+
+
+</mapper>

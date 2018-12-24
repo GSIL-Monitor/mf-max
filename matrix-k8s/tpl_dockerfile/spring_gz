@@ -1,0 +1,20 @@
+# 继承的基础镜像，注意jdk和tomcat版本需要配套
+FROM harbor.missfresh.net/library/java:8u192-jdk
+
+MAINTAINER missfresh.cn
+
+
+# 复制必要数据存入镜像
+COPY TARGET_DATA /data/app/TARGET_NAME
+WORKDIR /data/app
+RUN mkdir -p /data/logs \
+  && tar -zxf TARGET_NAME
+
+# TARGET.DIR: 表示解压后的目录名称
+ENV LIB_DIR /data/app/TARGET_DIR/lib
+ENV JAVA_OPTS -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true
+
+WORKDIR /data/app/TARGET_DIR
+
+# 容器启动的命令，注意使用数组格式，否则会被解析成sh -c cmd，导致启动后容器立即退出
+CMD java ${JAVA_OPTS} -Dfile.encoding=utf-8 -Dsun.jnu.encoding=UTF8 -Duser.timezone=Asia/Shanghai -classpath ${LIB_DIR}:`ls ${LIB_DIR}|grep .jar|awk '{print "'${LIB_DIR}'/"$0}'|tr "\n" ":"` com.alibaba.dubbo.container.Main

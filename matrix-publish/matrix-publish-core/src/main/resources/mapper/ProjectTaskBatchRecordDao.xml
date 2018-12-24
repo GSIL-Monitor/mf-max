@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mryx.matrix.publish.core.dao.ProjectTaskBatchRecordDao">
+    <resultMap id="BaseResultMap" type="com.mryx.matrix.publish.domain.ProjectTaskBatchRecord">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="projectTaskId" column="project_task_id" jdbcType="INTEGER"/>
+        <result property="projectTaskBatchId" column="project_task_batch_id" jdbcType="INTEGER"/>
+        <result property="deployRecordId" column="deploy_record_id" jdbcType="INTEGER"/>
+        <result property="forwardBatchId" column="forward_batch_id" jdbcType="INTEGER"/>
+        <result property="sequenece" column="sequenece" jdbcType="INTEGER"/>
+        <result property="deployStatus" column="deploy_status" jdbcType="INTEGER"/>
+        <result property="subDeployStatus" column="sub_deploy_status" jdbcType="INTEGER"/>
+        <result property="machineCount" column="machine_count" jdbcType="INTEGER"/>
+        <result property="appGroup" column="app_group" jdbcType="VARCHAR"/>
+        <result property="waitTime" column="wait_time" jdbcType="INTEGER"/>
+        <result property="serviceIps" column="service_ips" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="delFlag" column="del_flag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,project_task_id,project_task_batch_id,deploy_record_id,forward_batch_id,sequenece,deploy_status,sub_deploy_status,machine_count,app_group,wait_time,service_ips,create_time,update_time,del_flag
+    </sql>
+
+    <sql id="conditions">
+        <if test="id != null ">and id = #{id,jdbcType=INTEGER}</if>
+        <if test="projectTaskId != null ">and project_task_id = #{projectTaskId,jdbcType=INTEGER}</if>
+        <if test="projectTaskBatchId != null ">and project_task_batch_id = #{projectTaskBatchId,jdbcType=INTEGER}</if>
+        <if test="deployRecordId != null ">and deploy_record_id = #{deployRecordId,jdbcType=INTEGER}</if>
+        <if test="forwardBatchId != null">and forward_batch_id = #{forwardBatchId,jdbcType=INTEGER}</if>
+        <if test="sequenece != null ">and sequenece = #{sequenece,jdbcType=INTEGER}</if>
+        <if test="deployStatus != null ">and deploy_status = #{deployStatus,jdbcType=INTEGER}</if>
+        <if test="subDeployStatus != null ">and sub_deploy_status = #{subDeployStatus,jdbcType=INTEGER}</if>
+        <if test="machineCount != null ">and machine_count = #{machineCount,jdbcType=INTEGER}</if>
+        <if test="appGroup != null ">and app_group = #{appGroup,jdbcType=VARCHAR}</if>
+        <if test="waitTime != null ">and wait_time = #{waitTime,jdbcType=INTEGER}</if>
+        <if test="serviceIps != null ">and service_ips = #{serviceIps,jdbcType=VARCHAR}</if>
+        <if test="createTime != null ">and create_time = #{createTime,jdbcType=TIMESTAMP}</if>
+        <if test="updateTime != null ">and update_time = #{updateTime,jdbcType=TIMESTAMP}</if>
+        <if test="delFlag != null ">and del_flag = #{delFlag,jdbcType=INTEGER}</if>
+    </sql>
+
+    <select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM project_task_batch_record
+        WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getByBatchId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM project_task_batch_record
+        WHERE
+        forward_batch_id = #{batchId,jdbcType=INTEGER}
+    </select>
+
+    <select id="getFirstBatchByRecord" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM project_task_batch_record
+        WHERE
+        deploy_record_id = #{recordId,jdbcType=INTEGER}
+        and deploy_status = 6
+        and forward_batch_id = 0
+        order by id desc
+        limit 1
+    </select>
+
+    <insert id="insert" parameterType="com.mryx.matrix.publish.domain.ProjectTaskBatchRecord" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO project_task_batch_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="projectTaskId != null">project_task_id,</if>
+            <if test="projectTaskBatchId != null">project_task_batch_id,</if>
+            <if test="deployRecordId != null">deploy_record_id,</if>
+            <if test="forwardBatchId != null">forward_batch_id,</if>
+            <if test="sequenece != null">sequenece,</if>
+            <if test="deployStatus != null">deploy_status,</if>
+            <if test="subDeployStatus != null ">sub_deploy_status,}</if>
+            <if test="machineCount != null">machine_count,</if>
+            <if test="appGroup != null ">app_group,</if>
+            <if test="waitTime != null">wait_time,</if>
+            <if test="serviceIps != null">service_ips,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">#{id,jdbcType=INTEGER},</if>
+            <if test="projectTaskId!=null">#{projectTaskId,jdbcType=INTEGER},</if>
+            <if test="projectTaskBatchId!=null">#{projectTaskBatchId,jdbcType=INTEGER},</if>
+            <if test="deployRecordId!=null">#{deployRecordId,jdbcType=INTEGER},</if>
+            <if test="forwardBatchId!=null">#{forwardBatchId,jdbcType=INTEGER},</if>
+            <if test="sequenece!=null">#{sequenece,jdbcType=INTEGER},</if>
+            <if test="deployStatus!=null">#{deployStatus,jdbcType=INTEGER},</if>
+            <if test="subDeployStatus != null ">#{subDeployStatus,jdbcType=INTEGER},</if>
+            <if test="machineCount!=null">#{machineCount,jdbcType=INTEGER},</if>
+            <if test="appGroup!= null">#{appGroup,jdbcType=VARCHAR},</if>
+            <if test="waitTime!=null">#{waitTime,jdbcType=INTEGER},</if>
+            <if test="serviceIps!=null">#{serviceIps,jdbcType=VARCHAR},</if>
+            <if test="createTime!=null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime!=null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="delFlag!=null">#{delFlag,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.mryx.matrix.publish.domain.ProjectTaskBatchRecord">
+        UPDATE project_task_batch_record
+        <set>
+            <if test="projectTaskId != null ">project_task_id = #{projectTaskId,jdbcType=INTEGER} ,</if>
+            <if test="projectTaskBatchId != null ">project_task_batch_id = #{projectTaskBatchId,jdbcType=INTEGER} ,</if>
+            <if test="deployRecordId != null ">deploy_record_id = #{deployRecordId,jdbcType=INTEGER} ,</if>
+            <if test="forwardBatchId != null ">forward_batch_id = #{forwardBatchId,jdbcType=INTEGER} ,</if>
+            <if test="sequenece != null ">sequenece = #{sequenece,jdbcType=INTEGER} ,</if>
+            <if test="deployStatus != null ">deploy_status = #{deployStatus,jdbcType=INTEGER} ,</if>
+            <if test="subDeployStatus != null ">sub_deploy_status = #{subDeployStatus,jdbcType=INTEGER},</if>
+            <if test="machineCount != null ">machine_count = #{machineCount,jdbcType=INTEGER} ,</if>
+            <if test="appGroup != null ">app_group = #{appGroup,jdbcType=VARCHAR} ,</if>
+            <if test="waitTime != null ">wait_time = #{waitTime,jdbcType=INTEGER} ,</if>
+            <if test="serviceIps != null ">service_ips = #{serviceIps,jdbcType=VARCHAR} ,</if>
+            <if test="createTime != null ">create_time = #{createTime,jdbcType=TIMESTAMP} ,</if>
+            <if test="updateTime != null ">update_time = #{updateTime,jdbcType=TIMESTAMP} ,</if>
+            <if test="delFlag != null ">del_flag = #{delFlag,jdbcType=INTEGER} ,</if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="pageTotal" resultType="java.lang.Integer" parameterType="java.util.HashMap" useCache="false">
+        SELECT
+        count(*)
+        FROM project_task_batch_record
+        WHERE
+        <include refid="conditions"/>
+    </select>
+
+    <select id="list" resultMap="BaseResultMap" parameterType="java.util.HashMap" useCache="false">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM project_task_batch_record
+        WHERE 1=1
+        <include refid="conditions"/>
+        ORDER BY id DESC
+        limit #{startOfPage},#{pageSize}
+    </select>
+
+    <select id="listByCondition" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM project_task_batch_record
+        WHERE 1=1
+        <include refid="conditions"/>
+    </select>
+
+    <update id="delete" parameterType="com.mryx.matrix.publish.domain.ProjectTaskBatchRecord">
+        UPDATE project_task_batch_record
+        SET del_flag = 0
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO project_task_batch_record
+        (project_task_id,project_task_batch_id,deploy_record_id,sequenece,deploy_status,machine_count,app_group,wait_time,service_ips)
+        VALUES
+        <foreach collection="list" item="projectTaskBatchRecord" index="index" separator=",">
+            (#{projectTaskBatchRecord.projectTaskId,jdbcType=INTEGER},
+            <if test="projectTaskBatchRecord.projectTaskBatchId != null ">
+                #{projectTaskBatchRecord.projectTaskBatchId,jdbcType=INTEGER} ,
+            </if>
+            <if test="projectTaskBatchRecord.projectTaskBatchId == null ">0,</if>
+            #{projectTaskBatchRecord.deployRecordId,jdbcType=INTEGER},
+            <if test="projectTaskBatchRecord.sequenece != null">#{projectTaskBatchRecord.sequenece,jdbcType=INTEGER},
+            </if>
+            <if test="projectTaskBatchRecord.sequenece == null">0,</if>
+            <if test="projectTaskBatchRecord.deployStatus != null ">
+                #{projectTaskBatchRecord.deployStatus,jdbcType=INTEGER},
+            </if>
+            <if test="projectTaskBatchRecord.deployStatus == null ">0,</if>
+            #{projectTaskBatchRecord.machineCount,jdbcType=INTEGER},
+            #{projectTaskBatchRecord.appGroup,jdbcType=VARCHAR},
+            <if test="projectTaskBatchRecord.waitTime != null ">#{projectTaskBatchRecord.waitTime,jdbcType=INTEGER},
+            </if>
+            <if test="projectTaskBatchRecord.waitTime == null ">0,</if>
+            #{projectTaskBatchRecord.serviceIps,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <update id="batchDelete" parameterType="java.util.List">
+        UPDATE project_task_batch_record
+        SET del_flag = 0
+        WHERE id IN
+        <foreach collection="list" item="projectTaskBatchRecord" index="index" separator="," open="(" close=")">
+            #{projectTaskBatchRecord.id,jdbcType=INTEGER}
+        </foreach>
+    </update>
+
+    <select id="getByRecordId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM project_task_batch_record
+        WHERE del_flag = 1
+        AND deploy_record_id = #{recordId,jdbcType=INTEGER}
+    </select>
+
+    <update id="updateStatusToSuspend" parameterType="com.mryx.matrix.publish.domain.ProjectTaskBatchRecord">
+        UPDATE project_task_batch_record
+        set deploy_status = 10
+        where
+        1=1
+        <if test="id != null ">and id = #{id,jdbcType=INTEGER}</if>
+        <if test="projectTaskId != null ">and project_task_id = #{projectTaskId,jdbcType=INTEGER}</if>
+        <if test="projectTaskBatchId != null ">and project_task_batch_id = #{projectTaskBatchId,jdbcType=INTEGER}</if>
+        <if test="deployRecordId != null ">and deploy_record_id = #{deployRecordId,jdbcType=INTEGER}</if>
+        <if test="forwardBatchId != null">and forward_batch_id = #{forwardBatchId,jdbcType=INTEGER}</if>
+        <if test="sequenece != null ">and sequenece = #{sequenece,jdbcType=INTEGER}</if>
+        <if test="deployStatus != null ">and deploy_status = #{deployStatus,jdbcType=INTEGER}</if>
+        <if test="machineCount != null ">and machine_count = #{machineCount,jdbcType=INTEGER}</if>
+        <if test="appGroup != null ">and app_group = #{appGroup,jdbcType=VARCHAR}</if>
+        <if test="waitTime != null ">and wait_time = #{waitTime,jdbcType=INTEGER}</if>
+        <if test="serviceIps != null ">and service_ips = #{serviceIps,jdbcType=VARCHAR}</if>
+        <if test="createTime != null ">and create_time = #{createTime,jdbcType=TIMESTAMP}</if>
+        <if test="updateTime != null ">and update_time = #{updateTime,jdbcType=TIMESTAMP}</if>
+        <if test="delFlag != null ">and del_flag = #{delFlag,jdbcType=INTEGER}</if>
+    </update>
+
+</mapper>

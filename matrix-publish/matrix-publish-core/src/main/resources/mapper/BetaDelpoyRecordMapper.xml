@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.publish.core.dao.BetaDelpoyRecordDao">
+
+	<!--通用测试环境部署记录表表映射-->
+	<resultMap id="BaseResultMap" type="com.mryx.matrix.publish.domain.BetaDelpoyRecord" >
+		<id property="id" column="id" jdbcType="INTEGER" />
+		<result property="projectId" column="project_id" jdbcType="INTEGER" />
+		<result property="projectTaskId" column="project_task_id" jdbcType="INTEGER" />
+		<result property="appCode" column="app_code" jdbcType="VARCHAR" />
+		<result property="appName" column="app_name" jdbcType="VARCHAR" />
+		<result property="appBranch" column="app_branch" jdbcType="VARCHAR" />
+		<result property="appBtag" column="app_btag" jdbcType="VARCHAR" />
+		<result property="profile" column="beta_profile" jdbcType="VARCHAR" />
+		<result property="isDeploy" column="is_deploy" jdbcType="INTEGER" />
+		<result property="deployStatus" column="deploy_status" jdbcType="INTEGER" />
+		<result property="subDeployStatus" column="sub_deploy_status" jdbcType="INTEGER" />
+		<result property="serviceIps" column="service_ips" jdbcType="VARCHAR" />
+		<result property="publishUser" column="publish_user" jdbcType="VARCHAR" />
+		<result property="logPath" column="log_path" jdbcType="VARCHAR" />
+		<result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+		<result property="delFlag" column="del_flag" jdbcType="INTEGER" />
+		<result property="isStress" column="is_stress" jdbcType="INTEGER"/>
+	</resultMap>
+
+
+	<!-- 通用查询结果集合-->
+	<sql id="Base_Column_List">
+	id,project_id,project_task_id,app_code,app_name,app_branch,app_btag,beta_profile,is_deploy,deploy_status,sub_deploy_status,service_ips,publish_user,log_path,create_time,update_time,del_flag,is_stress
+	</sql>
+
+	<!-- 公共查询条件-->
+	<!-- collection foreach DATE_FORMAT(create_time,'%Y-%m-%d') like CONCAT('%',#{goodsNo,jdbcType=VARCHAR},'%') -->
+	<!-- <![CDATA[<=]]> date_format(FROM_UNIXTIME(expire_time),'%Y-%c-%d %h:%i:%s') as showExpireTime-->
+
+	<sql id="conditions">
+		<if test="id != null "> and id = #{id,jdbcType=INTEGER} </if>
+		<if test="projectId != null "> and project_id = #{projectId,jdbcType=INTEGER} </if>
+		<if test="projectTaskId != null "> and project_task_id = #{projectTaskId,jdbcType=INTEGER} </if>
+		<if test="appCode != null and appCode != '' "> and app_code = #{appCode,jdbcType=VARCHAR} </if>
+		<if test="appName != null and appName != '' "> and app_name = #{appName,jdbcType=VARCHAR} </if>
+		<if test="appBranch != null and appBranch != '' "> and app_branch = #{appBranch,jdbcType=VARCHAR} </if>
+		<if test="appBtag != null and appBtag != '' "> and app_btag = #{appBtag,jdbcType=VARCHAR} </if>
+		<if test="profile != null and profile != '' "> and beta_profile = #{profile,jdbcType=VARCHAR}</if>
+		<if test="isDeploy != null "> and is_deploy = #{isDeploy,jdbcType=INTEGER}</if>
+		<if test="deployStatus != null "> and deploy_status = #{deployStatus,jdbcType=INTEGER} </if>
+		<if test="subDeployStatus != null ">and sub_deploy_status = #{subDeployStatus,jdbcType=INTEGER} </if>
+		<if test="serviceIps != null and serviceIps != '' "> and service_ips = #{serviceIps,jdbcType=VARCHAR} </if>
+		<if test="publishUser != null and publishUser != ''">and publish_user = #{publishUser,jdbcType=VARCHAR} </if>
+		<if test="logPath != null and logPath != '' "> and log_path = #{logPath,jdbcType=VARCHAR} </if>
+		<if test="createTime != null and createTime != '' "> and create_time = #{createTime,jdbcType=TIMESTAMP} </if>
+		<if test="updateTime != null and updateTime != '' "> and update_time = #{updateTime,jdbcType=TIMESTAMP} </if>
+		<if test="delFlag != null "> and del_flag = #{delFlag,jdbcType=INTEGER} </if>
+        <if test="isStress != null "> and is_stress = #{isStress,jdbcType=INTEGER} </if>
+	</sql>
+
+	<sql id="listConditions">
+		<if test="projectId != null and mode==null"> and project_id like CONCAT('%',#{projectId,jdbcType=INTEGER} ,'%')</if>
+		<if test="projectId != null and mode=='exact'"> and project_id = #{projectId,jdbcType=INTEGER} </if>
+		<if test="appCode != null and appCode != '' and mode==null "> and app_code like CONCAT('%',#{appCode,jdbcType=VARCHAR} ,'%') </if>
+		<if test="appCode != null and appCode != '' and mode=='exact' "> and app_code = #{appCode,jdbcType=VARCHAR}</if>
+		<if test="appBranch != null and appBranch != '' "> and app_branch like CONCAT('%',#{appBranch,jdbcType=VARCHAR} ,'%') </if>
+		<if test="deployStatus != null "> and deploy_status = #{deployStatus,jdbcType=INTEGER} </if>
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM beta_delpoy_record
+		 WHERE id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 添加 （匹配有值的字段,不建议使用）-->
+	<insert id="insert" parameterType="com.mryx.matrix.publish.domain.BetaDelpoyRecord" useGeneratedKeys="true" keyProperty="id">
+		 INSERT INTO beta_delpoy_record
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null"> id,</if>
+			<if test="projectId != null"> project_id,</if>
+			<if test="projectTaskId != null"> project_task_id,</if>
+			<if test="appCode != null"> app_code,</if>
+			<if test="appName != null"> app_name,</if>
+			<if test="appBranch != null"> app_branch,</if>
+			<if test="appBtag != null"> app_btag,</if>
+		    <if test="profile != null"> beta_profile,</if>
+		    <if test="isDeploy != null "> is_deploy,</if>
+		    <if test="deployStatus != null"> deploy_status,</if>
+		    <if test="subDeployStatus != null"> sub_deploy_status,</if>
+		    <if test="serviceIps != null"> service_ips,</if>
+		    <if test="publishUser != null"> publish_user,</if>
+		    <if test="logPath != null"> log_path,</if>
+		    <if test="createTime != null"> create_time,</if>
+			<if test="updateTime != null"> update_time,</if>
+			<if test="delFlag != null"> del_flag,</if>
+			 <if test="isDockerDeploy != null"> is_docker_deploy,</if>
+			 <if test="dockerEnv != null"> docker_env,</if>
+			 <if test="bizLine != null"> biz_line,</if>
+		    <if test="isStress != null"> is_stress,</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">#{id,jdbcType=INTEGER},</if>
+			<if test="projectId!=null">#{projectId,jdbcType=INTEGER},</if>
+			<if test="projectTaskId!=null">#{projectTaskId,jdbcType=INTEGER},</if>
+			<if test="appCode!=null">#{appCode,jdbcType=VARCHAR},</if>
+			<if test="appName!=null">#{appName,jdbcType=VARCHAR},</if>
+			<if test="appBranch!=null">#{appBranch,jdbcType=VARCHAR},</if>
+			<if test="appBtag!=null">#{appBtag,jdbcType=VARCHAR},</if>
+		    <if test="profile != null">#{profile,jdbcType=VARCHAR},</if>
+		    <if test="isDeploy != null ">#{isDeploy,jdbcType=INTEGER},</if>
+		    <if test="deployStatus!=null">#{deployStatus,jdbcType=INTEGER},</if>
+		    <if test="subDeployStatus != null">#{subDeployStatus,jdbcType=INTEGER},</if>
+			<if test="serviceIps!=null">#{serviceIps,jdbcType=VARCHAR},</if>
+		    <if test="publishUser!=null">#{publishUser,jdbcType=VARCHAR},</if>
+		    <if test="logPath!=null">#{logPath,jdbcType=VARCHAR},</if>
+		    <if test="createTime!=null">#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime!=null">#{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag!=null">#{delFlag,jdbcType=INTEGER},</if>
+			 <if test="isDockerDeploy != null"> #{isDockerDeploy,jdbcType=INTEGER},</if>
+			 <if test="dockerEnv != null"> #{dockerEnv,jdbcType=VARCHAR},</if>
+			 <if test="bizLine != null"> #{bizLine,jdbcType=VARCHAR},</if>
+		    <if test="isStress != null"> #{isStress,jdbcType=INTEGER},</if>
+		 </trim>
+	</insert>
+
+	<!-- 根据主键修改输入的值-->
+	<update id="updateById" parameterType="com.mryx.matrix.publish.domain.BetaDelpoyRecord">
+		 UPDATE beta_delpoy_record
+ 		 <set> 
+			<if test="projectId != null">project_id = #{projectId,jdbcType=INTEGER},</if>
+			<if test="projectTaskId != null">project_task_id = #{projectTaskId,jdbcType=INTEGER},</if>
+			<if test="appCode != null">app_code = #{appCode,jdbcType=VARCHAR},</if>
+			<if test="appName != null">app_name = #{appName,jdbcType=VARCHAR},</if>
+			<if test="appBranch != null">app_branch = #{appBranch,jdbcType=VARCHAR},</if>
+			<if test="appBtag != null">app_btag = #{appBtag,jdbcType=VARCHAR},</if>
+		    <if test="profile != null and profile != '' ">beta_profile = #{profile,jdbcType=VARCHAR},</if>
+	  	 	<if test="isDeploy != null ">is_deploy = #{isDeploy,jdbcType=INTEGER},</if>
+		    <if test="deployStatus != null">deploy_status = #{deployStatus,jdbcType=INTEGER},</if>
+		    <if test="subDeployStatus != null ">sub_deploy_status = #{subDeployStatus,jdbcType=INTEGER}, </if>
+		    <if test="serviceIps != null">service_ips = #{serviceIps,jdbcType=VARCHAR},</if>
+		    <if test="publishUser!=null">publish_user = #{publishUser,jdbcType=VARCHAR},</if>
+		    <if test="logPath != null"> log_path = #{logPath,jdbcType=VARCHAR},</if>
+		    <if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null">del_flag = #{delFlag,jdbcType=INTEGER},</if>
+		    <if test="isStress != null">is_stress = #{isStress,jdbcType=INTEGER},</if>
+ 		 </set>
+		 WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 分页查询 -->
+	<select id="listPage" resultMap="BaseResultMap" parameterType="java.util.HashMap" useCache="false">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM beta_delpoy_record
+		 WHERE 1=1
+		 <include refid="listConditions" />
+		 ORDER BY id DESC
+		 limit #{startOfPage},#{pageSize}
+	</select>
+
+	<!-- 分页查询总数 -->
+	<select id="pageTotal" resultType="java.lang.Integer" parameterType="java.util.HashMap" useCache="false">
+		 SELECT
+		 count(*) 
+		 FROM beta_delpoy_record
+		 WHERE
+		 1=1
+		 <include refid="listConditions" />
+	</select>
+
+	<!-- 按条件查询列表 -->
+	<select id="listByCondition" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM beta_delpoy_record
+		 WHERE 1=1
+		 <include refid="conditions" />
+	</select>
+
+	<insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO beta_delpoy_record
+		(project_id, project_task_id, app_code, app_name, app_branch, app_btag,beta_profile,is_deploy,service_ips,publish_user,log_path)
+		VALUES
+		<foreach collection="list" item="betaDelpoyRecord" index="index" separator=",">
+			(#{betaDelpoyRecord.projectId,jdbcType=INTEGER},
+			#{betaDelpoyRecord.projectTaskId,jdbcType=INTEGER},
+			#{betaDelpoyRecord.appCode,jdbcType=VARCHAR},
+			<if test="betaDelpoyRecord.appName == null">'',</if>
+			<if test="betaDelpoyRecord.appName != null">#{betaDelpoyRecord.appName,jdbcType=VARCHAR},</if>
+			<if test="betaDelpoyRecord.appBranch == null">'',</if>
+			<if test="betaDelpoyRecord.appBranch != null">#{betaDelpoyRecord.appBranch,jdbcType=VARCHAR},</if>
+			<if test="betaDelpoyRecord.appBtag == null">'',</if>
+			<if test="betaDelpoyRecord.appBtag != null" >#{betaDelpoyRecord.appBtag,jdbcType=VARCHAR},</if>
+			<if test="betaDelpoyRecord.profile != null">#{betaDelpoyRecord.profile,jdbcType=VARCHAR},</if>
+			<if test="betaDelpoyRecord.profile == null">'',</if>
+			<if test="betaDelpoyRecord.isDeploy != null ">#{betaDelpoyRecord.isDeploy,jdbcType=INTEGER},</if>
+			<if test="betaDelpoyRecord.isDeploy == null ">1,</if>
+			#{betaDelpoyRecord.serviceIps,jdbcType=VARCHAR},
+			#{betaDelpoyRecord.publishUser,jdbcType=VARCHAR},
+			<if test="betaDelpoyRecord.logPath == null">'')</if>
+			<if test="betaDelpoyRecord.logPath != null" >#{betaDelpoyRecord.logPath,jdbcType=VARCHAR})</if>
+		</foreach>
+	</insert>
+
+	<select id="listByCodeStatus" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM beta_delpoy_record
+		WHERE
+		app_code = #{appCode,jdbcType=VARCHAR}
+		and deploy_status in (1,2,11,13)
+	</select>
+
+	<select id="getLastId" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM beta_delpoy_record
+		WHERE
+		project_task_id = #{projectTaskId,jdbcType=INTEGER}
+		order by id desc
+		limit 1
+	</select>
+
+</mapper>

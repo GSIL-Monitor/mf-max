@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.process.core.dao.CodeReviewResultDao">
+
+	<select id="getCodeReviewLinkUrl" parameterType="java.lang.Integer" resultType="java.lang.String">
+			SELECT link_url FROM code_review_result
+			WHERE project_task_id = #{id,jdbcType=INTEGER} ORDER BY update_time DESC LIMIT 1;
+	</select>
+</mapper>

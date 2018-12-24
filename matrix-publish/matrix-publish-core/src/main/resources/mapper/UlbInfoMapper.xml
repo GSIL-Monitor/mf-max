@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.publish.core.dao.UlbInfoDao">
+
+    <resultMap id="BaseResultMap" type="com.mryx.matrix.publish.domain.UlbInfo">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="ulbName" column="ulb_name" jdbcType="VARCHAR"/>
+        <result property="privateIp" column="private_ip" jdbcType="VARCHAR"/>
+        <result property="eip" column="eip" jdbcType="VARCHAR"/>
+        <result property="ip" column="ip" jdbcType="VARCHAR"/>
+        <result property="backendPort" column="backend_port" jdbcType="INTEGER"/>
+        <result property="ulbId" column="ulb_id" jdbcType="VARCHAR"/>
+        <result property="backendId" column="backend_id" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,ulb_name,private_ip,eip,ip,backend_port,ulb_id,backend_id,create_time,update_time
+    </sql>
+
+    <sql id="conditions">
+        <if test=" id != null">and id = #{id,jdbcType=INTEGER}</if>
+        <if test=" ulbName != null">and ulb_name = #{ulbName,jdbcType=VARCHAR}</if>
+        <if test=" privateIp != null">and private_ip = #{privateIp,jdbcType=VARCHAR}</if>
+        <if test=" eip != null">and eip = #{ip,jdbcType=VARCHAR}</if>
+        <if test=" ip != null">and ip = #{ip,jdbcType=VARCHAR}</if>
+        <if test=" backendPort != null">and backend_port = #{backendPort,jdbcType=INTEGER}</if>
+        <if test=" ulbId != null and ulbId != ''">and ulb_id = #{ulbId,jdbcType=VARCHAR}</if>
+        <if test=" backendId != null and backendId != ''">and backend_id = #{backendId,jdbcType=VARCHAR}</if>
+        <if test=" createTime != null and createTime != ''">and create_time = #{createTime,jdbcType=TIMESTAMP}</if>
+        <if test=" updateTime != null and updateTime != ''">and update_time = #{updateTime,jdbcType=TIMESTAMP}</if>
+    </sql>
+
+    <insert id="batchInsertUlbInfo" parameterType="java.util.List">
+        insert into ulb_info(ulb_name,private_ip,eip,ip,backend_port, ulb_id,backend_id) values
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            (#{item.ulbName},#{item.privateIp},#{item.eip},#{item.ip},#{item.backendPort},#{item.ulbId},#{item.backendId})
+        </foreach>
+    </insert>
+
+    <select id="getUlbInfoByIp" parameterType="com.mryx.matrix.publish.domain.UlbInfo" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM ulb_info
+        WHERE ip = #{ip,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="getUlbInfoByIpAndBackendPort" parameterType="com.mryx.matrix.publish.domain.UlbInfo"
+            resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM ulb_info
+        WHERE ip = #{ip,jdbcType=VARCHAR} and backend_port = #{backendPort,jdbcType=INTEGER}
+    </select>
+
+
+    <select id="getUlbInfoByUlbId" parameterType="com.mryx.matrix.publish.domain.UlbInfo" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM ulb_info
+        WHERE ulb_id = #{ulbId,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateUlbInfoByIp" parameterType="com.mryx.matrix.publish.domain.UlbInfo">
+        update ulb_info
+        <set>
+            <if test="ulbId != null">ulb_id = #{ulbId,jdbcType=VARCHAR},</if>
+            <if test="backendId != null ">backend_id = #{backendId,jdbcType=VARCHAR},</if>
+        </set>
+        WHERE ip = #{ip,jdbcType=VARCHAR} and backend_port = #{backendPort,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteAll">
+        delete from ulb_info
+    </delete>
+
+</mapper>

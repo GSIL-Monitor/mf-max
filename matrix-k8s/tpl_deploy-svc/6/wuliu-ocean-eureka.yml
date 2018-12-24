@@ -1,0 +1,89 @@
+apiVersion: extensions/v1beta1 ## 稳定的版本，这里不要改动
+kind: Deployment ## 用于启动服务
+metadata:
+  name: wuliu-ocean-eureka # 变量 -应用中心的名字
+  namespace: DEPLOY_ENV # 变量 -根据命名规范进行替换，例如d1, b1等
+  labels:
+    app: wuliu-ocean-eureka # 变量 -应用中心的名字
+spec:
+  replicas: 1 ## 默认启动一个pod, 降低资源消耗
+  minReadySeconds: 10   ## 滚动升级时10s后认为该pod就绪
+  revisionHistoryLimit: 5
+  strategy:
+    rollingUpdate:  ## 由于replicas为3,则整个升级,pod个数在2-4个之间
+      maxSurge: 1      ## 滚动升级时会先启动1个pod
+      maxUnavailable: 1 ## 滚动升级时允许的最大Unavailable的pod个数
+  template:
+    metadata:
+      labels:
+        app: wuliu-ocean-eureka ## 变量 -应用中心的名字
+    spec:
+      terminationGracePeriodSeconds: 60 ##k8s将会给应用发送SIGTERM信号，可以用来正确、优雅地关闭应用,默认为30秒
+      imagePullSecrets:
+      - name: registry-secret
+      - name: qcloudregistrykey
+      - name: tencenthubkey ## 使用上面提供的REGISTRY_KEY_NAME，目前统一使用registry-secret，不需修改
+      containers:
+      - image: harbor.missfresh.net/library/filebeat:5.4.0
+        imagePullPolicy: Always
+        name: filebeat
+        volumeMounts:
+        - name: app-logs
+          mountPath: /log
+        - name: filebeat-config
+          mountPath: /etc/filebeat/
+      - name: wuliu-ocean-eureka ## 变量 -应用中心的名字
+        image: harbor.missfresh.net/testing/wuliu-ocean-eureka:master ## 变量 - 私服地址/testing/应用名:分支名
+        command: ["java","-jar","/data/app/ocean-eureka.jar","--spring.profiles.active=autotest", "--server.port=8080"]
+        imagePullPolicy: Always ## default: IfNotPresent, 使用Always确保拉取最新的镜像
+        resources:
+          # keep request = limit to keep this container in guaranteed class
+          requests: # 资源分配，默认CPU 1核，内存 512MB~4GB
+            cpu: "250m"
+            memory: 512Mi
+          limits:
+            cpu: "500m"
+            memory: 2Gi
+        terminationMessagePath: /dev/termination-log
+        volumeMounts: # 用于保证pod和宿主机的时间一致
+        - mountPath: /etc/localtime
+          name: tz-config
+          readOnly: true
+        - mountPath: /data/logs/ocean-eureka
+          name: app-logs
+        env: ## 变量，用于替换配置文件中的系统变量
+          - name: NGINX_ENV # NGINX_ENV用于配置文件，替换环境信息
+            value: "DEPLOY_ENV" # 根据规范替换为,b1,b2, d1,d2等
+          - name: ZK_ADDR
+            value: "ZK_ADDR_ENV" # 变量，用于替换不同环境的zk地址
+        ports:
+          - name: http
+            containerPort: 8080 # 容器使用的端口，默认一律使用8080
+      restartPolicy: Always
+      securityContext: {}
+      serviceAccountName: ""
+      volumes:
+      - hostPath: ## 用于保证pod和宿主机的时间一致
+          path: /usr/share/zoneinfo/Asia/Shanghai
+        name: tz-config
+      - name: app-logs
+        emptyDir: {}
+      - name: filebeat-config
+        configMap:
+          name: filebeat-config
+---
+kind: Service # 创立service, 用于暴露服务
+apiVersion: v1
+metadata:
+  name: wuliu-ocean-eureka # 变量 -应用中心的名字
+  namespace: DEPLOY_ENV # 变量 -根据命名规范进行替换，例如d1, b1等
+  labels:
+    app: wuliu-ocean-eureka ## 变量 -应用中心的名字
+spec:
+  type: NodePort ## 使用ClusterIP方式。避免使用NodePort,会自动在每个宿主机上都暴露同样的端口，不推荐使用
+  ports:
+  - port: 80 ## 容器之间访问的端口（通过应用中心获取），容器内可以使用 serviceName.namespaceName:clusterPort, e.g. helloworld.testing:80, 80端口可忽略使用helloworld.testing直接访问对应应用
+    targetPort: 8080 ## 容器自身启动使用端口
+    protocol: TCP
+  selector:
+    app: wuliu-ocean-eureka ## 变量 -应用中心的名字

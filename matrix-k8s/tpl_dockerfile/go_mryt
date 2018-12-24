@@ -1,0 +1,15 @@
+# 继承的基础镜像，注意jdk和tomcat版本需要配套
+FROM harbor.missfresh.net/library/golang_with_glide:1.11.2
+
+MAINTAINER missfresh.com
+
+WORKDIR $GOPATH/src/TARGET_NAME
+
+ADD . $GOPATH/src/TARGET_NAME
+
+# 每日一淘不需要glide install, 后面考虑如何处理，可以考虑使用前缀
+RUN go build -v .
+
+
+# 容器启动的命令，注意使用数组格式，否则会被解析成sh -c cmd，导致启动后容器立即退出
+ENTRYPOINT ["./TARGET_NAME"]

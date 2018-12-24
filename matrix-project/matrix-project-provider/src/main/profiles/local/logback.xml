@@ -1,0 +1,48 @@
+<configuration>
+
+    <!--该配置只在本地使用， 不用copy到生产环境使用-->
+
+    <property name="LOG_PATH" value="data/logs/"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%X{logId}][%F:%L][%p] %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/matrix-project.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/matrix-project-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>40</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%X{logId}][%F:%L][%p] %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="send-msg" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/send-msg.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/send-msg.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d %p [%t] %c{20} - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="send-msg" level="INFO" additivity="false">
+        <appender-ref ref="send-msg"/>
+    </logger>
+
+    <logger name="com.apache.ibatis" level="INFO" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="file"/>
+    </root>
+
+</configuration>

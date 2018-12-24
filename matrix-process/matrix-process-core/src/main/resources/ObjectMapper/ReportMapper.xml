@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.process.core.dao.ReportDao">
+
+	<!--通用周报表表映射-->
+	<resultMap id="BaseResultMap" type="com.mryx.matrix.process.domain.ReportDTO" >
+		<id property="id" column="id" jdbcType="INTEGER" />
+		<result property="reportTime" column="report_time" jdbcType="TIMESTAMP" />
+		<result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+		<result property="selfProjectName" column="self_project_name" jdbcType="VARCHAR" />
+		<result property="curWeekCnt" column="cur_week_cnt" jdbcType="VARCHAR" />
+		<result property="nextWeekCnt" column="next_week_cnt" jdbcType="VARCHAR" />
+		<result property="author" column="author" jdbcType="VARCHAR" />
+		<result property="delFlag" column="del_flag" jdbcType="INTEGER" />
+	</resultMap>
+
+
+	<!-- 通用查询结果集合-->
+	<sql id="Base_Column_List">
+	id,	report_time,	create_time,	update_time,	self_project_name,	cur_week_cnt,	next_week_cnt,	author,	del_flag
+	</sql>
+
+	<!-- 公共查询条件-->
+	<!-- collection foreach DATE_FORMAT(create_time,'%Y-%m-%d') like CONCAT('%',#{goodsNo,jdbcType=VARCHAR},'%') -->
+	<!-- <![CDATA[<=]]> date_format(FROM_UNIXTIME(expire_time),'%Y-%c-%d %h:%i:%s') as showExpireTime-->
+
+	<sql id="conditions">
+		<if test="id != null "> and id = #{id,jdbcType=INTEGER} </if>
+		<if test="reportTime != null "> and report_time = #{reportTime,jdbcType=TIMESTAMP} </if>
+		<if test="createTime != null "> and create_time = #{createTime,jdbcType=TIMESTAMP} </if>
+		<if test="updateTime != null  "> and update_time = #{updateTime,jdbcType=TIMESTAMP} </if>
+		<if test="selfProjectName != null and selfProjectName != '' "> and self_project_name = #{selfProjectName,jdbcType=VARCHAR} </if>
+		<if test="curWeekCnt != null and curWeekCnt != '' "> and cur_week_cnt = #{curWeekCnt,jdbcType=VARCHAR} </if>
+		<if test="nextWeekCnt != null and nextWeekCnt != '' "> and next_week_cnt = #{nextWeekCnt,jdbcType=VARCHAR} </if>
+		<if test="author != null and author != '' "> and author = #{author,jdbcType=VARCHAR} </if>
+		<if test="delFlag != null "> and del_flag = #{delFlag,jdbcType=INTEGER} </if>
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM report
+		 WHERE id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 添加 （匹配有值的字段,不建议使用）-->
+	<insert id="insert" parameterType="com.mryx.matrix.process.domain.ReportDTO">
+		 INSERT INTO report
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null"> id,</if>
+			<if test="reportTime != null"> report_time,</if>
+			<if test="createTime != null"> create_time,</if>
+			<if test="updateTime != null"> update_time,</if>
+			<if test="selfProjectName != null"> self_project_name,</if>
+			<if test="curWeekCnt != null"> cur_week_cnt,</if>
+			<if test="nextWeekCnt != null"> next_week_cnt,</if>
+			<if test="author != null"> author,</if>
+			<if test="delFlag != null"> del_flag,</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">#{id,jdbcType=INTEGER},</if>
+			<if test="reportTime!=null">#{reportTime,jdbcType=TIMESTAMP},</if>
+			<if test="createTime!=null">#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime!=null">#{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="selfProjectName!=null">#{selfProjectName,jdbcType=VARCHAR},</if>
+			<if test="curWeekCnt!=null">#{curWeekCnt,jdbcType=VARCHAR},</if>
+			<if test="nextWeekCnt!=null">#{nextWeekCnt,jdbcType=VARCHAR},</if>
+			<if test="author!=null">#{author,jdbcType=VARCHAR},</if>
+			<if test="delFlag!=null">#{delFlag,jdbcType=INTEGER},</if>
+		 </trim>
+	</insert>
+
+	<!-- 根据主键修改输入的值-->
+	<update id="updateById" parameterType="com.mryx.matrix.process.domain.ReportDTO">
+		 UPDATE report
+ 		 <set> 
+			<if test="reportTime != null">report_time = #{reportTime,jdbcType=TIMESTAMP},</if>
+			<if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="selfProjectName != null">self_project_name = #{selfProjectName,jdbcType=VARCHAR},</if>
+			<if test="curWeekCnt != null">cur_week_cnt = #{curWeekCnt,jdbcType=VARCHAR},</if>
+			<if test="nextWeekCnt != null">next_week_cnt = #{nextWeekCnt,jdbcType=VARCHAR},</if>
+			<if test="author != null">author = #{author,jdbcType=VARCHAR},</if>
+			<if test="delFlag != null">del_flag = #{delFlag,jdbcType=INTEGER},</if>
+
+ 		 </set>
+		 WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 分页查询 -->
+	<select id="listPage" resultMap="BaseResultMap" parameterType="java.util.HashMap" useCache="false">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM report
+		 WHERE 1=1
+		 <include refid="conditions" />
+		 ORDER BY id DESC
+		 limit #{startOfPage},#{pageSize}
+	</select>
+
+	<!-- 分页查询总数 -->
+	<select id="pageTotal" resultType="java.lang.Integer" parameterType="java.util.HashMap" useCache="false">
+		 SELECT
+		 count(*) 
+		 FROM report
+		 WHERE 1=1
+		 <include refid="conditions" />
+	</select>
+
+	<!-- 按条件查询列表 -->
+	<select id="listByCondition" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM report
+		 WHERE 1=1
+		 <include refid="conditions" />
+	</select>
+
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.codeanalyzer.core.dao.ProjectCodeScanReportDao">
+
+    <resultMap id="dataMap" type="com.mryx.matrix.codeanalyzer.domain.CodeScanResult">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="git_addresss" property="gitAddress" jdbcType="VARCHAR"/>
+        <result column="code_branch" property="codeBranch" jdbcType="VARCHAR"/>
+        <result column="blocker" property="blocker" jdbcType="INTEGER"/>
+        <result column="critical" property="critical" jdbcType="INTEGER"/>
+        <result column="major" property="major" jdbcType="INTEGER"/>
+        <result column="code_scan_time" property="codeScanTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="getDataWeek" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanResult" resultMap="dataMap">
+        SELECT id,code_branch,blocker,critical,major,code_scan_time FROM code_scan_result
+        WHERE DATE_SUB(CURDATE(), INTERVAL 7 DAY) <![CDATA[<date(update_time)]]>
+        AND app_code = #{appCode,jdbcType=VARCHAR} AND type_of_scan = #{typeOfScan,jdbcType=INTEGER} AND manual_or_automatic=2;
+
+--         SELECT ID,blocker,critical,major FROM code_scan_result WHERE YEARWEEK(date_format(update_time,'%Y-%m-%d')) = YEARWEEK(now());
+--         select id,blocker,critical,major from code_scan_result where update_time between current_date()-7 and current_date()
+
+    </select>
+
+    <select id="getDataMonth" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanResult" resultMap="dataMap">
+        SELECT id,code_branch,blocker,critical,major,code_scan_time FROM code_scan_result
+        WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) <![CDATA[<date(update_time)]]>
+        AND app_code = #{appCode,jdbcType=VARCHAR} AND type_of_scan = #{typeOfScan,jdbcType=INTEGER} AND manual_or_automatic=2;
+    </select>
+
+    <select id="getDataInfo" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanResult" resultMap="dataMap">
+        SELECT id,code_branch,blocker,critical,major FROM code_scan_result
+        WHERE app_code = #{appCode,jdbcType=VARCHAR} AND type_of_scan = #{typeOfScan,jdbcType=INTEGER}
+        AND manual_or_automatic=2 ORDER BY code_scan_time DESC LIMIT 2;
+    </select>
+
+    <resultMap id="recordMap" type="com.mryx.matrix.codeanalyzer.domain.CodeScanJobRecord">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="blocker" property="blocker" jdbcType="INTEGER"/>
+        <result column="critical" property="critical" jdbcType="INTEGER"/>
+        <result column="major" property="major" jdbcType="INTEGER"/>
+        <result column="code_scan_time" property="codeScanTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="getP3cDataWeek" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanJobRecord" resultMap="recordMap">
+        SELECT id,blocker,critical,major,code_scan_time FROM code_scan_job_record WHERE job_status = 0 AND job_id = #{jobId,jdbcType=INTEGER}
+        ORDER BY code_scan_time DESC LIMIT 10;
+    </select>
+</mapper>

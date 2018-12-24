@@ -1,0 +1,79 @@
+<!-- lang: xml-->
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoder 默认配置为PatternLayoutEncoder -->
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%X{logId}][%F:%L][%p] %m%n</pattern>
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{uuid}] [%X{orderNo}] %-5level %logger{36} - %msg%n</pattern>-->
+        </encoder>
+    </appender>
+
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <!--  <append>true</append>   -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/matrix-proxy-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>40</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%X{logId}][%F:%L][%p] %m%n</pattern>
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{uuid}] [%X{orderNo}] %-5level %logger{36} %X{logId} - %msg%n</pattern>-->
+        </encoder>
+    </appender>
+
+    <appender name="monitor-api" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/monitor-api.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/monitor-api.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d %p [%t] %c{20} %X{logId} - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="send-msg" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/send-msg.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/send-msg.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d %p [%t] %c{20} - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="aop-log" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/aop.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/aop.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="aop-log" level="INFO" additivity="false">
+        <appender-ref ref="aop-log"/>
+    </logger>
+
+    <logger name="send-msg" level="INFO" additivity="false">
+        <appender-ref ref="send-msg"/>
+    </logger>
+
+    <logger name="monitor-api" level="INFO" additivity="false">
+        <appender-ref ref="monitor-api"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="file"/>
+    </root>
+
+    <logger name="com.mryx.matrix" level="INFO" additivity="true"/>
+
+    <logger name="org.apache.commons.httpclient.HttpMethodBase" level="ERROR" additivity="true"/>
+
+</configuration>

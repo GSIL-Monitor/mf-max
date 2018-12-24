@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-DEPLOY_ENV ## 不需要改动，会出现在对应的namespace的ingress列表下
+  namespace: DEPLOY_ENV # 变量 -根据命名规范进行替换，例如b1, b2等
+  annotations:
+    kubernetes.io/ingress.class: qcloud
+spec:
+  rules:
+  - host: "*.DEPLOY_ENV.missfresh.net"
+    http:
+      paths:
+      - backend:
+          serviceName: openresty-proxy
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+
+

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.mryx.matrix</groupId>
+    <artifactId>matrix-publish-core</artifactId>
+    <version>${project.version}</version>
+    <packaging>jar</packaging>
+
+    <name>matrix-publish-core</name>
+    <description>matrix-publish-core</description>
+
+    <parent>
+        <groupId>com.mryx.matrix</groupId>
+        <artifactId>matrix-publish</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.mryx.matrix</groupId>
+            <artifactId>matrix-publish-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.47</version>
+        </dependency>
+        <!--ulb sdk-->
+        <dependency>
+            <groupId>cn.ucloud</groupId>
+            <artifactId>ucloud-sdk-java-ulb</artifactId>
+            <version>0.6-release</version>
+        </dependency>
+        <!--rabbitmq java client-->
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>5.4.1</version>
+        </dependency>
+    </dependencies>
+
+</project>

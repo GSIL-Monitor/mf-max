@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.process.core.dao.AppServerDao">
+
+	<!--通用表映射-->
+	<resultMap id="BaseResultMap" type="com.mryx.matrix.process.domain.AppServer" >
+		<id property="id" column="id" jdbcType="INTEGER" />
+		<result property="hostIp" column="host_ip" jdbcType="VARCHAR" />
+		<result property="appCode" column="app_code" jdbcType="VARCHAR" />
+		<result property="appName" column="app_name" jdbcType="VARCHAR" />
+		<result property="deptId" column="dept_id" jdbcType="INTEGER" />
+		<result property="deptName" column="dept_name" jdbcType="VARCHAR" />
+		<result property="groupName" column="group_name" jdbcType="VARCHAR" />
+		<result property="gmtCreate" column="gmt_create" jdbcType="TIMESTAMP" />
+		<result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP" />
+		<result property="tag" column="tag" jdbcType="VARCHAR" />
+		<result property="status" column="deploy_status" jdbcType="INTEGER" />
+		<result property="delFlag" column="del_flag" jdbcType="INTEGER" />
+		<result property="msReport" column="ms_report" jdbcType="BIGINT"/>
+	</resultMap>
+
+
+	<!-- 通用查询结果集合-->
+	<sql id="Base_Column_List">
+		id,	host_ip, app_code, app_name, dept_id, dept_name, group_name, gmt_create, gmt_modified, tag, deploy_status, del_flag, ms_report
+	</sql>
+
+	<!-- 公共查询条件-->
+	<!-- collection foreach DATE_FORMAT(create_time,'%Y-%m-%d') like CONCAT('%',#{goodsNo,jdbcType=VARCHAR},'%') -->
+	<!-- <![CDATA[<=]]> date_format(FROM_UNIXTIME(expire_time),'%Y-%c-%d %h:%i:%s') as showExpireTime-->
+
+	<sql id="conditions">
+		<if test="id != null "> and id = #{id,jdbcType=INTEGER} </if>
+		<if test="hostIp != null and hostIp != '' "> and host_ip = #{hostIp,jdbcType=VARCHAR} </if>
+		<if test="hostIpLike != null and hostIpLike != '' "> and host_ip like CONCAT(CONCAT('%', #{hostIpLike,jdbcType=VARCHAR}), '%') </if>
+		<if test="appCode != null and appCode != '' "> and app_code = #{appCode,jdbcType=VARCHAR} </if>
+		<if test="appCodeLike != null and appCodeLike != '' "> and app_code like CONCAT(CONCAT('%', #{appCodeLike,jdbcType=VARCHAR}), '%') </if>
+		<if test="appName != null and appName != '' "> and app_name = #{appName,jdbcType=VARCHAR} </if>
+		<if test="appNameLike != null and appNameLike != '' "> and app_Name like CONCAT(CONCAT('%', #{appNameLike,jdbcType=VARCHAR}), '%') </if>
+		<if test="deptId != null"> and dept_id = #{deptId,jdbcType=INTEGER} </if>
+		<if test="deptName != null and deptName != '' "> and dept_name like CONCAT(CONCAT('%', #{deptName,jdbcType=VARCHAR}), '%') </if>
+		<if test="groupName != null and groupName != '' "> and group_name = #{groupName,jdbcType=VARCHAR} </if>
+		<if test="gmtCreate != null and gmtCreate != '' "> and gmt_create = #{gmtCreate,jdbcType=TIMESTAMP} </if>
+		<if test="gmtModified != null and gmtModified != '' "> and gmt_modified = #{gmtModified,jdbcType=TIMESTAMP} </if>
+		<if test="tag != null and tag != '' "> and tag = #{tag,jdbcType=VARCHAR} </if>
+		<if test="status != null "> and deploy_status = #{status,jdbcType=INTEGER} </if>
+		<if test="delFlag != null "> and del_flag = #{delFlag,jdbcType=INTEGER} </if>
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM app_server
+		WHERE id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 添加 （匹配有值的字段,不建议使用）-->
+	<insert id="insert" parameterType="com.mryx.matrix.process.domain.AppServer">
+		INSERT INTO app_server
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null"> id,</if>
+			<if test="hostIp != null"> host_ip,</if>
+			<if test="appCode != null"> app_code,</if>
+			<if test="appName != null"> app_name,</if>
+			<if test="deptId !=null"> dept_id, </if>
+			<if test="deptName !=null"> dept_name, </if>
+			<if test="groupName != null"> group_name,</if>
+			<if test="gmtCreate != null"> gmt_create,</if>
+			<if test="gmtModified != null"> gmt_modified,</if>
+			<if test="tag != null"> tag,</if>
+			<if test="status != null"> deploy_status,</if>
+			<if test="delFlag != null"> del_flag,</if>
+		    <if test="msReport !=null"> ms_report,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">#{id,jdbcType=INTEGER},</if>
+			<if test="hostIp!=null">#{hostIp,jdbcType=VARCHAR},</if>
+			<if test="appCode!=null">#{appCode,jdbcType=VARCHAR},</if>
+			<if test="appName!=null">#{appName,jdbcType=VARCHAR},</if>
+			<if test="deptId!=null">#{deptId,jdbcType=INTEGER},</if>
+			<if test="deptName!=null">#{deptName,jdbcType=VARCHAR},</if>
+			<if test="groupName!=null">#{groupName,jdbcType=VARCHAR},</if>
+			<if test="gmtCreate!=null">#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			<if test="gmtModified!=null">#{gmtModified,jdbcType=TIMESTAMP},</if>
+			<if test="tag!=null">#{tag,jdbcType=VARCHAR},</if>
+			<if test="status!=null">#{status,jdbcType=INTEGER},</if>
+			<if test="delFlag!=null">#{delFlag,jdbcType=INTEGER},</if>
+		    <if test="msReport!=null">#{msReport,jdbcType=BIGINT},</if>
+		</trim>
+	</insert>
+
+	<!-- 根据主键修改输入的值-->
+	<update id="updateById" parameterType="com.mryx.matrix.process.domain.AppServer">
+		UPDATE app_server
+		<set>
+			<if test="hostIp != null">host_ip = #{hostIp,jdbcType=VARCHAR},</if>
+			<if test="appCode != null">app_code = #{appCode,jdbcType=VARCHAR},</if>
+			<if test="appName != null">app_name = #{appName,jdbcType=VARCHAR},</if>
+			<if test="deptId != null">dept_id = #{deptId,jdbcType=INTEGER},</if>
+			<if test="deptName != null">dept_name = #{deptName,jdbcType=VARCHAR},</if>
+			<if test="groupName != null">group_name = #{groupName,jdbcType=VARCHAR},</if>
+			<if test="gmtCreate != null">gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},</if>
+			<if test="gmtModified != null">gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},</if>
+			<if test="tag != null">tag = #{tag,jdbcType=VARCHAR},</if>
+			<if test="status != null">deploy_status = #{status,jdbcType=INTEGER},</if>
+			<if test="delFlag != null">del_flag = #{delFlag,jdbcType=INTEGER},</if>
+		    <if test="msReport != null">ms_report = #{msReport,jdbcType=BIGINT},</if>
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 分页查询 -->
+	<select id="listPage" resultMap="BaseResultMap" parameterType="java.util.HashMap" useCache="false">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM app_server
+		WHERE del_flag = 1
+        <include refid="conditions" />
+		<if test="agentStatus !=null and agentStatus == 1"> and ms_report > #{msReport,jdbcType=BIGINT}</if>
+		<if test="agentStatus !=null and agentStatus == 0"> and #{msReport,jdbcType=BIGINT} >= ms_report</if>
+		ORDER BY id DESC
+		limit #{startOfPage},#{pageSize}
+	</select>
+
+	<!-- 分页查询总数 -->
+	<select id="pageTotal" resultType="java.lang.Integer" parameterType="java.util.HashMap" useCache="false">
+		SELECT
+		count(*)
+		FROM app_server
+		WHERE del_flag = 1
+		<include refid="conditions" />
+		<if test="agentStatus !=null and agentStatus == 1"> and ms_report > #{msReport,jdbcType=BIGINT}</if>
+		<if test="agentStatus !=null and agentStatus == 0"> and #{msReport,jdbcType=BIGINT} >= ms_report</if>
+	</select>
+
+	<!-- 按条件查询列表 -->
+	<select id="listByCondition" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM app_server
+		WHERE 1=1
+		<include refid="conditions" />
+	</select>
+
+	<!-- 批量提交应用与服务器映射信息 -->
+	<insert id="batchUpdateOrInsert" parameterType="java.util.List" useGeneratedKeys="false" keyProperty="id">
+		INSERT INTO app_server
+		(id,host_ip,app_code,app_name,dept_id,dept_name,group_name,gmt_create,gmt_modified,del_flag)
+		VALUES
+		<foreach collection="list" item="appServer" index="index" separator="," >
+			(
+			#{appServer.id,jdbcType=INTEGER},
+			#{appServer.hostIp,jdbcType=VARCHAR},
+			#{appServer.appCode,jdbcType=VARCHAR},
+			#{appServer.appName,jdbcType=VARCHAR},
+			#{appServer.deptId,jdbcType=INTEGER},
+			#{appServer.deptName,jdbcType=VARCHAR},
+			#{appServer.groupName,jdbcType=VARCHAR},
+			#{appServer.gmtCreate,jdbcType=TIMESTAMP},
+			#{appServer.gmtModified,jdbcType=TIMESTAMP},
+			#{appServer.delFlag,jdbcType=INTEGER}
+			)
+		</foreach>
+		ON DUPLICATE KEY UPDATE
+		host_ip=VALUES(host_ip),
+		app_code=VALUES(app_code),
+		app_name=VALUES(app_name),
+		dept_id=VALUES(dept_id),
+		dept_name=VALUES(dept_name),
+		group_name=VALUES(group_name),
+		gmt_create=VALUES(gmt_create),
+		gmt_modified=VALUES(gmt_modified),
+		del_flag=VALUES(del_flag)
+	</insert>
+
+	<!-- 根据主键修改输入的值-->
+	<update id="batchUpdateByIp" parameterType="com.mryx.matrix.process.domain.AppServer">
+		UPDATE app_server
+		<set>
+			<if test="appCode != null">app_code = #{appCode,jdbcType=VARCHAR},</if>
+			<if test="appName != null">app_name = #{appName,jdbcType=VARCHAR},</if>
+			<if test="deptId != null">dept_id = #{deptId,jdbcType=INTEGER},</if>
+			<if test="deptName != null">dept_name = #{deptName,jdbcType=VARCHAR},</if>
+			<if test="groupName != null">group_name = #{groupName,jdbcType=VARCHAR},</if>
+			<if test="gmtCreate != null">gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},</if>
+			<if test="gmtModified != null">gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},</if>
+			<if test="tag != null">tag = #{tag,jdbcType=VARCHAR},</if>
+			<if test="status != null">deploy_status = #{status,jdbcType=INTEGER},</if>
+			<if test="delFlag != null">del_flag = #{delFlag,jdbcType=INTEGER},</if>
+		    <if test="msReport != null">ms_report = #{msReport,jdbcType=BIGINT},</if>
+		</set>
+		WHERE host_ip = #{hostIp,jdbcType=INTEGER} and del_flag = 1
+    </update>
+
+	<select id="listAllIps" resultType="java.lang.String" parameterType="java.util.HashMap">
+		select distinct host_ip host_ip from app_server where del_flag = 1
+	</select>
+</mapper>

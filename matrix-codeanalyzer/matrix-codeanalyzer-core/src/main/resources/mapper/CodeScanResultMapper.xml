@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.codeanalyzer.core.dao.CodeScanResultDao">
+
+    <select id="getCodeScanResult" parameterType="java.lang.Integer" resultType="java.util.Map">
+			SELECT id,code_scan_time,blocker,critical,major,minor,info,status,code_scan_result_url FROM code_scan_result
+			WHERE project_task_id = #{id,jdbcType=INTEGER} AND is_master =0 ORDER BY update_time DESC LIMIT 1;
+	</select>
+
+    <select id="getMasterCodeScanResult" parameterType="java.lang.Integer" resultType="java.util.Map">
+			SELECT id,blocker,critical,major,minor,info FROM code_scan_result
+			WHERE project_task_id = #{id,jdbcType=INTEGER} AND is_master =1 ORDER BY update_time DESC LIMIT 1;
+	</select>
+</mapper>

@@ -1,0 +1,27 @@
+# filebeat的配置文件，每个namespace共用一个
+# close_是用来释放文件句柄，防止磁盘很快打满的
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeat-config
+  namespace: DEPLOY_ENV # 变量 -根据命名规范进行替换，例如d1, b1等
+data:
+  filebeat.yml: |
+    filebeat.prospectors:
+    - input_type: log
+      paths:
+        - "/log/*"
+      close_older: 30m
+      force_close_files: true
+      close_inactive: 1m
+      close_timeout: 3h
+      clean_inactive: 72h
+      ignore_older: 70h
+    output.console:
+      enabled: true
+    output.elasticsearch:
+      hosts: ["elasticsearch.default:9200"]
+      username: "elastic"
+      password: "changeme"
+      index: "DEPLOY_ENV-%{+yyyy.MM.dd}"

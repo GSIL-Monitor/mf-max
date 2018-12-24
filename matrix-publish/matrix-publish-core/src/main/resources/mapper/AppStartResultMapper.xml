@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.publish.core.dao.AppStartResultDao">
+    <resultMap id="BaseResultMap" type="com.mryx.matrix.publish.domain.AppStartResult">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="resultCode" column="result_code" jdbcType="VARCHAR"/>
+        <result property="message" column="message" jdbcType="VARCHAR"/>
+        <result property="buildType" column="build_type" jdbcType="VARCHAR"/>
+        <result property="ip" column="ip" jdbcType="VARCHAR"/>
+        <result property="recordId" column="record_id" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,result_code,message,build_type,ip,record_id,create_time,update_time
+    </sql>
+
+    <sql id="conditions">
+        <if test=" id != null">and id = #{id,jdbcType=INTEGER}</if>
+        <if test=" resultCode != null">and result_code = #{resultCode,jdbcType=VARCHAR}</if>
+        <if test=" message != null">and message = #{message,jdbcType=VARCHAR}</if>
+        <if test=" buildType != null">and build_type = #{buildType,jdbcType=VARCHAR}</if>
+        <if test=" ip != null and ip != ''">and ip = #{ip,jdbcType=VARCHAR}</if>
+        <if test=" recordId != null and recordId != ''">and recordId = #{recordId,jdbcType=VARCHAR}</if>
+    </sql>
+
+    <insert id="insert" parameterType="com.mryx.matrix.publish.domain.AppStartResult">
+        insert into app_start_result
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test=" resultCode != null">result_code,</if>
+            <if test=" message != null">message,</if>
+            <if test=" buildType != null">build_type,</if>
+            <if test=" ip != null">ip,</if>
+            <if test=" recordId != null">record_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test=" resultCode != null">#{resultCode,jdbcType=VARCHAR},</if>
+            <if test=" message != null">#{message,jdbcType=VARCHAR},</if>
+            <if test=" buildType != null">#{buildType,jdbcType=VARCHAR},</if>
+            <if test=" ip != null">#{ip,jdbcType=VARCHAR},</if>
+            <if test=" recordId != null">#{recordId,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+
+    <select id="selectByParameter" parameterType="com.mryx.matrix.publish.domain.AppStartResult"
+            resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM app_start_result
+        WHERE build_type = #{buildType,jdbcType=VARCHAR} and ip = #{ip,jdbcType=VARCHAR} and record_id = #{recordId,jdbcType=VARCHAR} order BY id desc limit 1
+    </select>
+
+</mapper>

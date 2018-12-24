@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.publish.core.dao.ProjectTaskDao">
+
+    <!--通用测试环境部署记录表表映射-->
+    <resultMap id="BaseResultMap" type="com.mryx.matrix.publish.domain.ProjectTask" >
+        <id property="id" column="id" jdbcType="INTEGER" />
+        <result property="projectId" column="project_id" jdbcType="INTEGER" />
+        <result property="sequenece" column="sequenece" jdbcType="INTEGER" />
+        <result property="appCode" column="app_code" jdbcType="VARCHAR" />
+        <result property="appBranch" column="app_branch" jdbcType="VARCHAR" />
+        <result property="appBtag" column="app_btag" jdbcType="VARCHAR" />
+        <result property="appDevOwner" column="app_dev_owner" jdbcType="VARCHAR" />
+        <result property="appRtag" column="app_rtag" jdbcType="VARCHAR" />
+        <result property="profile" column="beta_profile" jdbcType="VARCHAR" />
+        <result property="isDeploy" column="is_deploy" jdbcType="INTEGER" />
+        <result property="taskStatus" column="task_status" jdbcType="INTEGER"/>
+        <result property="subTaskStatus" column="sub_task_status" jdbcType="INTEGER"/>
+        <result property="releaseTaskStatus" column="release_task_status" jdbcType="INTEGER"/>
+        <result property="subReleaseTaskStatus" column="sub_release_task_status" jdbcType="INTEGER"/>
+        <result property="serviceIps" column="service_ips" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+        <result property="delFlag" column="del_flag" jdbcType="INTEGER" />
+        <result property="bizLine" column="biz_line" jdbcType="VARCHAR" />
+        <result property="dockerEnv" column="docker_env" jdbcType="VARCHAR" />
+        <result property="isDockerDeploy" column="is_docker_deploy" jdbcType="INTEGER" />
+    </resultMap>
+
+
+    <!-- 通用查询结果集合-->
+    <sql id="Base_Column_List">
+        id,project_id,sequenece,app_code,app_branch,app_btag,app_dev_owner,app_rtag,beta_profile,is_deploy,task_status,sub_task_status,release_task_status,sub_release_task_status,service_ips,create_time,update_time,del_flag
+    </sql>
+
+    <!-- 公共查询条件-->
+    <!-- collection foreach DATE_FORMAT(create_time,'%Y-%m-%d') like CONCAT('%',#{goodsNo,jdbcType=VARCHAR},'%') -->
+    <!-- <![CDATA[<=]]> date_format(FROM_UNIXTIME(expire_time),'%Y-%c-%d %h:%i:%s') as showExpireTime-->
+
+    <sql id="conditions">
+        <if test="id != null "> and id = #{id,jdbcType=INTEGER} </if>
+        <if test="projectId != null "> and project_id = #{projectId,jdbcType=INTEGER} </if>
+        <if test="sequenece != null "> and sequenece = #{sequenece,jdbcType=INTEGER} </if>
+        <if test="appCode != null and appCode != '' "> and app_code = #{appCode,jdbcType=VARCHAR} </if>
+        <if test="appBranch != null and appBranch != '' "> and app_branch = #{appBranch,jdbcType=VARCHAR} </if>
+        <if test="appBtag != null and appBtag != '' "> and app_btag = #{appBtag,jdbcType=VARCHAR} </if>
+        <if test="appDevOwner != null and appDevOwner != '' "> and app_dev_owner = #{appDevOwner,jdbcType=VARCHAR} </if>
+        <if test="appRtag != null and appRtag != '' "> and app_rtag = #{appRtag,jdbcType=VARCHAR} </if>
+        <if test="profile != null and profile != '' "> and beta_profile = #{profile,jdbcType=VARCHAR}</if>
+        <if test="isDeploy != null "> and is_deploy = #{isDeploy,jdbcType=INTEGER}</if>
+        <if test="taskStatus != null "> and task_status = #{taskStatus,jdbcType=INTEGER} </if>
+        <if test="subTaskStatus != null ">and sub_task_status = #{subTaskStatus,jdbcType=INTEGER}</if>
+        <if test="releaseTaskStatus != null ">and release_task_status = #{releaseTaskStatus,jdbcType=INTEGER}</if>
+        <if test="subReleaseTaskStatus != null">and sub_release_task_status = #{subReleaseTaskStatus,jdbcType=INTEGER}</if>
+        <if test="serviceIps != null and serviceIps != '' "> and service_ips = #{serviceIps,jdbcType=VARCHAR} </if>
+        <if test="createTime != null and createTime != '' "> and create_time = #{createTime,jdbcType=TIMESTAMP} </if>
+        <if test="updateTime != null and updateTime != '' "> and update_time = #{updateTime,jdbcType=TIMESTAMP} </if>
+        <if test="delFlag != null "> and del_flag = #{delFlag,jdbcType=INTEGER} </if>
+    </sql>
+
+    <sql id="sConditions">
+        <if test="id != null "> and id = #{id,jdbcType=INTEGER} </if>
+        <if test="projectId != null "> and project_id = #{projectId,jdbcType=INTEGER} </if>
+        <if test="sequenece != null "> and sequenece = #{sequenece,jdbcType=INTEGER} </if>
+        <if test="appCode != null and appCode != '' "> and app_code = #{appCode,jdbcType=VARCHAR} </if>
+        <if test="appBranch != null and appBranch != '' "> and app_branch = #{appBranch,jdbcType=VARCHAR} </if>
+        <if test="appBtag != null and appBtag != '' "> and app_btag = #{appBtag,jdbcType=VARCHAR} </if>
+        <if test="appDevOwner != null and appDevOwner != '' "> and app_dev_owner = #{appDevOwner,jdbcType=VARCHAR} </if>
+        <if test="appRtag != null and appRtag != '' "> and app_rtag = #{appRtag,jdbcType=VARCHAR} </if>
+        <if test="profile != null and profile != '' "> and beta_profile = #{profile,jdbcType=VARCHAR}</if>
+        <if test="isDeploy != null "> and is_deploy = #{isDeploy,jdbcType=INTEGER}</if>
+        <if test="taskStatus != null "> and task_status = #{taskStatus,jdbcType=INTEGER} </if>
+        <if test="releaseTaskStatus != null ">and release_task_status = #{releaseTaskStatus,jdbcType=INTEGER}</if>
+        <if test="serviceIps != null and serviceIps != '' "> and service_ips = #{serviceIps,jdbcType=VARCHAR} </if>
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM project_task
+        WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <!-- 添加 （匹配有值的字段,不建议使用）-->
+    <insert id="insert" parameterType="com.mryx.matrix.publish.domain.ProjectTask" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO project_task
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null"> id,</if>
+            <if test="projectId != null"> project_id,</if>
+            <if test="sequenece != null"> sequenece,</if>
+            <if test="appCode != null"> app_code,</if>
+            <if test="appBranch != null"> app_branch,</if>
+            <if test="appBtag != null"> app_btag,</if>
+            <if test="appDevOwner != null"> app_dev_owner,</if>
+            <if test="appRtag != null"> app_rtag,</if>
+            <if test="profile != null"> beta_profile,</if>
+            <if test="isDeploy != null "> is_deploy,</if>
+            <if test="taskStatus != null"> task_status,</if>
+            <if test="subTaskStatus != null "> sub_task_status,</if>
+            <if test="releaseTaskStatus != null "> release_task_status ,</if>
+            <if test="subReleaseTaskStatus != null"> sub_release_task_status ,</if>
+            <if test="serviceIps != null"> service_ips,</if>
+            <if test="createTime != null"> create_time,</if>
+            <if test="updateTime != null"> update_time,</if>
+            <if test="delFlag != null"> del_flag,</if>
+            <if test="bizLine != null"> biz_line,</if>
+            <if test="dockerEnv != null"> docker_env,</if>
+            <if test="isDockerDeploy != null"> is_docker_deploy,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id!=null">#{id,jdbcType=INTEGER},</if>
+            <if test="projectId!=null">#{projectId,jdbcType=INTEGER},</if>
+            <if test="sequenece!=null">#{sequenece,jdbcType=INTEGER},</if>
+            <if test="appCode!=null">#{appCode,jdbcType=VARCHAR},</if>
+            <if test="appBranch!=null">#{appBranch,jdbcType=VARCHAR},</if>
+            <if test="appBtag!=null">#{appBtag,jdbcType=VARCHAR},</if>
+            <if test="appDevOwner!=null">#{appDevOwner,jdbcType=VARCHAR},</if>
+            <if test="appRtag!=null">#{appRtag,jdbcType=VARCHAR},</if>
+            <if test="profile != null "> #{profile,jdbcType=VARCHAR},</if>
+            <if test="isDeploy != null "> #{isDeploy,jdbcType=INTEGER},</if>
+            <if test="taskStatus!=null">#{taskStatus,jdbcType=INTEGER},</if>
+            <if test="subTaskStatus != null ">#{subTaskStatus,jdbcType=INTEGER},</if>
+            <if test="releaseTaskStatus != null ">#{releaseTaskStatus,jdbcType=INTEGER},</if>
+            <if test="subReleaseTaskStatus != null">#{subReleaseTaskStatus,jdbcType=INTEGER},</if>
+            <if test="serviceIps!=null">#{serviceIps,jdbcType=VARCHAR},</if>
+            <if test="createTime!=null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime!=null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="delFlag!=null">#{delFlag,jdbcType=INTEGER},</if>
+            <if test="bizLine != null">#{bizLine,jdbcType=VARCHAR},</if>
+            <if test="dockerEnv != null"> #{dockerEnv,jdbcType=VARCHAR},</if>
+            <if test="isDockerDeploy != null"> #{isDockerDeploy,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>
+
+    <!-- 根据主键修改输入的值-->
+    <update id="updateById" parameterType="com.mryx.matrix.publish.domain.ProjectTask">
+        UPDATE project_task
+        <set>
+            <if test="projectId != null">project_id = #{projectId,jdbcType=INTEGER},</if>
+            <if test="sequenece != null">sequenece = #{sequenece,jdbcType=INTEGER},</if>
+            <if test="appCode != null">app_code = #{appCode,jdbcType=VARCHAR},</if>
+            <if test="appBranch != null">app_branch = #{appBranch,jdbcType=VARCHAR},</if>
+            <if test="appBtag != null">app_btag = #{appBtag,jdbcType=VARCHAR},</if>
+            <if test="appDevOwner != null">app_dev_owner = #{appDevOwner,jdbcType=VARCHAR},</if>
+            <if test="appRtag != null">app_rtag = #{appRtag,jdbcType=VARCHAR},</if>
+            <if test="profile != null ">beta_profile = #{profile,jdbcType=VARCHAR},</if>
+            <if test="isDeploy != null ">is_deploy = #{isDeploy,jdbcType=INTEGER},</if>
+            <if test="taskStatus != null">task_status = #{taskStatus,jdbcType=INTEGER},</if>
+            <if test="subTaskStatus != null ">sub_task_status = #{subTaskStatus,jdbcType=INTEGER},</if>
+            <if test="releaseTaskStatus != null ">release_task_status = #{releaseTaskStatus,jdbcType=INTEGER},</if>
+            <if test="subReleaseTaskStatus != null">sub_release_task_status = #{subReleaseTaskStatus,jdbcType=INTEGER},</if>
+            <if test="serviceIps != null">service_ips = #{serviceIps,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="delFlag != null">del_flag = #{delFlag,jdbcType=INTEGER},</if>
+            <if test="bizLine != null">biz_line = #{bizLine,jdbcType=VARCHAR},</if>
+            <if test="dockerEnv != null"> docker_env = #{dockerEnv,jdbcType=VARCHAR},</if>
+            <if test="isDockerDeploy != null"> is_docker_deploy = #{isDockerDeploy,jdbcType=INTEGER},</if>
+
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!-- 分页查询 -->
+    <select id="listPage" resultMap="BaseResultMap" parameterType="java.util.HashMap" useCache="false">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM project_task
+        WHERE 1=1
+        <include refid="conditions" />
+        AND del_flag = 1
+        ORDER BY id DESC
+        limit #{startOfPage},#{pageSize}
+    </select>
+
+    <!-- 分页查询总数 -->
+    <select id="pageTotal" resultType="java.lang.Integer" parameterType="java.util.HashMap" useCache="false">
+        SELECT
+        count(*)
+        FROM project_task
+        WHERE 1=1
+        <include refid="conditions" />
+        AND del_flag = 1
+    </select>
+
+    <!-- 按条件查询列表 -->
+    <select id="listByCondition" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM project_task
+        WHERE 1=1
+        <include refid="sConditions" />
+        AND del_flag = 1
+    </select>
+
+    <!--根据project_id查询项目下的应用-->
+    <select id="getProjectTasks" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM project_task
+        WHERE project_id=#{id,jdbcType=INTEGER}
+    </select>
+
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO project_task
+        (project_id,sequenece,app_code,app_branch,app_dev_owner,task_status,release_task_status,service_ip)
+        VALUES
+        <foreach collection="list" item="projectTask" index="index" separator="," open="(" close=")">
+            #{projectTask.projectId,jdbcType=INTEGER},
+            #{projectTask.sequenece,jdbcType=INTEGER},
+            #{projectTask.appCode,jdbcType=VARCHAR},
+            #{projectTask.appBranch,jdbcType=VARCHAR},
+            <if test="projectTask.appDevOwner != null" >#{projectTask.appDevOwner,jdbcType=VARCHAR},</if>
+            <if test="projectTask.appDevOwner == null" >'',</if>
+            <if test="profile != null"> #{profile,jdbcType=VARCHAR},</if>
+            <if test="profile == null"> '',</if>
+            <if test="isDeploy != null ">#{isDeploy,jdbcType=INTEGER},</if>
+            <if test="isDeploy == null ">1,</if>
+            <if test="projectTask.taskStatus != null " >#{projectTask.taskStatus,jdbcType=INTEGER},</if>
+            <if test="projectTask.taskStatus == null " >0,</if>
+            <if test="projectTask.releaseTaskStatus != null ">#{releaseTaskStatus,jdbcType=INTEGER},</if>
+            <if test="projectTask.releaseTaskStatus == null ">0,</if>
+            #{projectTask.serviceIps,jdbcType=VARCHAR}
+        </foreach>
+    </insert>
+
+    <update id="batchDelete" parameterType="java.util.List" >
+        UPDATE project_task
+        SET del_flag = 0
+        WHERE id IN
+        <foreach collection="list" item="projectTask" index="index" separator="," open="(" close=")">
+            #{projectTask.id,jdbcType=INTEGER}
+        </foreach>
+    </update>
+
+</mapper>

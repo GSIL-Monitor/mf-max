@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mryx.matrix.project.dao.IssueDao">
+    <resultMap id="BaseResultMap" type="com.mryx.matrix.project.domain.Issue">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="jiraIssueId" column="jira_issue_id" jdbcType="VARCHAR"/>
+        <result property="key" column="jira_issue_key" jdbcType="VARCHAR"/>
+        <result property="projectId" column="project_id" jdbcType="INTEGER"/>
+        <result property="jiraProjectId" column="jira_project_id" jdbcType="VARCHAR"/>
+        <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
+        <result property="modifyUser" column="modify_user" jdbcType="VARCHAR"/>
+        <result property="summary" column="summary" jdbcType="VARCHAR"/>
+        <result property="issueType" column="issue_type" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="priority" column="priority" jdbcType="INTEGER"/>
+        <result property="assignee" column="assignee" jdbcType="VARCHAR"/>
+        <result property="reporter" column="reporter" jdbcType="VARCHAR"/>
+        <result property="issueStatus" column="issue_status" jdbcType="VARCHAR"/>
+        <result property="gmtCreated" column="gmt_created" jdbcType="TIMESTAMP"/>
+        <result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP"/>
+        <result property="delFlag" column="del_flag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="conditions">
+        <if test=" id != null"> and id = #{id,jdbcType=INTEGER}</if>
+        <if test=" jiraIssueId != null"> and jira_issue_id = #{jiraIssueId,jdbcType=VARCHAR}</if>
+        <if test=" key != null"> and jira_issue_key = #{key,jdbcType=VARCHAR}</if>
+        <if test=" projectId != null"> and project_id = #{projectId,jdbcType=INTEGER}</if>
+        <if test=" jiraProjectId != null"> and jira_project_id = #{jiraProjectId,jdbcType=VARCHAR}</if>
+        <if test=" createUser != null"> and create_user = #{createUser,jdbcType=VARCHAR}</if>
+        <if test=" modifyUser != null and modifyUser != ''"> and modify_user = #{modifyUser,jdbcType=VARCHAR}</if>
+        <if test=" summary != null and summary != ''"> and summary = #{summary,jdbcType=VARCHAR}</if>
+        <if test=" issueType != null"> and issue_type = #{issueType,jdbcType=INTEGER}</if>
+        <if test=" description != null and description != ''"> and description = #{description,jdbcType=VARCHAR}</if>
+        <if test=" priority != null"> and priority = #{priority,jdbcType=INTEGER}</if>
+        <if test=" assignee != null and assignee != ''"> and assignee = #{assignee,jdbcType=VARCHAR}</if>
+        <if test=" reporter != null"> and reporter = #{reporter,jdbcType=INTEGER}</if>
+        <if test=" issueStatus != null"> and issueStatus = #{issueStatus,jdbcType=INTEGER}</if>
+        <if test=" gmtCreated != null"> and gmtCreated = #{gmtCreated,jdbcType=TIMESTAMP}</if>
+        <if test=" gmtModified != null and gmtModified != ''"> and gmtModified = #{gmtModified,jdbcType=TIMESTAMP}</if>
+        <if test=" delFlag != null"> and del_flag = #{delFlag,jdbcType=INTEGER}</if>
+    </sql>
+
+    <!--<insert id="insert" parameterType="com.mryx.matrix.publish.domain.DeployPlan" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO jira_issue
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test=" id != null">id,</if>
+            <if test=" jiraIssueId != null">jira_issue_id,</if>
+            <if test=" key!= null">jira_issue_key,</if>
+            <if test=" projectId != null">project_id,</if>
+            <if test=" createUser != null">create_user,</if>
+            <if test=" modifyUser != null">modify_user,</if>
+            <if test=" summary != null">summary,</if>
+            <if test=" issueType != null">issue_type,</if>
+            <if test=" description != null">description,</if>
+            <if test=" priority != null">priority,</if>
+            <if test=" assignee != null">assignee,</if>
+            <if test=" reporter != null">reporter,</if>
+            <if test=" issueStatus != null">issue_status,</if>
+            <if test=" gmtCreated != null">gmt_created,</if>
+            <if test=" gmtModified != null">gmt_modified,</if>
+            <if test=" delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test=" id != null">#{id,jdbcType=INTEGER},</if>
+            <if test=" projectId != null">#{projectId,jdbcType=INTEGER},</if>
+            <if test=" projectTaskId != null">#{projectTaskId,jdbcType=INTEGER},</if>
+            <if test=" appCode != null">#{appCode,jdbcType=VARCHAR},</if>
+            <if test=" sequenece != null">#{sequenece,jdbcType=INTEGER},</if>
+            <if test=" appBtag != null">#{appBtag,jdbcType=VARCHAR},</if>
+            <if test=" appRtag != null">#{appRtag,jdbcType=VARCHAR},</if>
+            <if test=" machineCount != null">#{machineCount,jdbcType=INTEGER},</if>
+            <if test=" appGroup != null">#{appGroup,jdbcType=VARCHAR},</if>
+            <if test=" waitTime != null">#{waitTime,jdbcType=INTEGER},</if>
+            <if test=" serviceIps != null">#{serviceIps,jdbcType=VARCHAR},</if>
+            <if test=" deployStatus != null">#{deployStatus,jdbcType=INTEGER},</if>
+            <if test=" subDeployStatus != null">#{subDeployStatus,jdbcType=INTEGER},</if>
+            <if test=" disable != null">#{disable,jdbcType=INTEGER},</if>
+            <if test=" createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test=" updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test=" delFlag != null">#{delFlag,jdbcType=INTEGER},</if>
+            <if test=" rollbackFlag !=null">#{rollbackFlag,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>-->
+
+    <sql id="Base_Column_List">
+        id,jira_issue_id,jira_issue_key,project_id,jira_project_id,creater_user,modify_user,summary,issue_type,description,priority,assignee,reporter,issue_status,gmt_created,gmt_modified,del_flag
+    </sql>
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from jira_issue
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from jira_issue
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <select id="listIssue" parameterType="com.mryx.matrix.project.domain.Issue" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from jira_issue
+        WHERE 1=1
+        <include refid="conditions"/>
+    </select>
+    <!-- 批量提交应用与服务器映射信息 -->
+    <insert id="batchUpdateOrInsert" parameterType="java.util.List" useGeneratedKeys="false" keyProperty="id">
+        INSERT INTO jira_issue
+        (id,jira_issue_id,project_id,jira_project_id,jira_issue_key,issue_type,del_flag)
+        VALUES
+        <foreach collection="list" item="issue" index="index" separator="," >
+            (
+            #{issue.id,jdbcType=INTEGER},
+            #{issue.jiraIssueId,jdbcType=VARCHAR},
+            #{issue.projectId,jdbcType=INTEGER},
+            <if test="issue.jiraProjectId==null">''</if>
+            <if test="issue.jiraProjectId!=null">#{issue.jiraProjectId,jdbcType=VARCHAR}</if>,
+            <if test="issue.key==null">''</if>
+            <if test="issue.key!=null">#{issue.key,jdbcType=VARCHAR}</if>,
+            <if test="issue.issueType==null">''</if>
+            <if test="issue.issueType!=null">#{issue.issueType,jdbcType=VARCHAR}</if>,
+            #{issue.delFlag,jdbcType=INTEGER}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        jira_issue_id=VALUES(jira_issue_id),
+        project_id=VALUES(project_id),
+        jira_project_id=VALUES(jira_project_id),
+        jira_issue_key=VALUES(jira_issue_key),
+        issue_type=VALUES(issue_type),
+        del_flag=VALUES(del_flag)
+    </insert>
+
+    <!--<insert id="batchUpdateOrInsert" parameterType="java.util.List" useGeneratedKeys="false" keyProperty="id">
+        INSERT INTO jira_issue
+        (id,jira_issue_id,jira_issue_key,project_id,jira_project_id,creater_user,modify_user,summary,issue_type,description,priority,assignee,reporter,issue_status,gmt_created,gmt_modified,del_flag)
+        VALUES
+        <foreach collection="list" item="issue" index="index" separator="," >
+            (
+            #{issue.id,jdbcType=INTEGER},
+            #{issue.jiraIssueId,jdbcType=VARCHAR},
+            #{issue.key,jdbcType=VARCHAR},
+            #{issue.projectId,jdbcType=INTEGER},
+            #{issue.jiraProjectId,jdbcType=VARCHAR},
+            #{issue.createUser,jdbcType=VARCHAR},
+            #{issue.modifyUser,jdbcType=VARCHAR},
+            #{issue.summary,jdbcType=VARCHAR},
+            #{issue.issueType,jdbcType=VARCHAR},
+            #{issue.description,jdbcType=VARCHAR},
+            #{issue.priority,jdbcType=INTEGER},
+            #{issue.assignee,jdbcType=VARCHAR},
+            #{issue.reporter,jdbcType=VARCHAR},
+            #{issue.issueStatus,jdbcType=VARCHAR},
+            #{issue.gmtCreated,jdbcType=TIMESTAMP},
+            #{issue.gmtModified,jdbcType=TIMESTAMP},
+            #{issue.delFlag,jdbcType=INTEGER}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        jira_issue_id=VALUES(jira_issue_id),
+        project_id=VALUES(project_id),
+        del_flag=VALUES(del_flag)
+    </insert>-->
+</mapper>

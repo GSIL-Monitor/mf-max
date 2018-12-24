@@ -1,0 +1,17 @@
+# 继承的基础镜像，注意jdk和tomcat版本需要配套
+FROM harbor.missfresh.net/library/tomcat:8.0.53
+
+MAINTAINER missfresh.cn
+
+ENV JAVA_OPTS="-Dfile.encoding=utf-8 -Dsun.jnu.encoding=UTF8"
+
+# 复制必要数据存入镜像
+COPY TARGET_DATA /data/server/apache-tomcat-8.0.53/webapps/TARGET_NAME
+
+RUN rm -irf /data/server/apache-tomcat-8.0.53/webapps/ROOT/* \
+    && unzip /data/server/apache-tomcat-8.0.53/webapps/TARGET_NAME -d /data/server/apache-tomcat-8.0.53/webapps/ROOT/ \
+    && mkdir -p /data/logs
+#    \ && rm -rf /data/server/apache-tomcat-8.0.53/webapps/TARGET_NAME
+
+# 容器启动的命令，注意使用数组格式，否则会被解析成sh -c cmd，导致启动后容器立即退出
+CMD ["/data/server/apache-tomcat-8.0.53/bin/catalina.sh","run"]

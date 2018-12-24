@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.process.core.dao.AppDeployConfigDao">
+
+	<!--通用表映射-->
+	<resultMap id="BaseResultMap" type="com.mryx.matrix.process.domain.AppDeployConfig" >
+		<id property="id" column="id" jdbcType="INTEGER" />
+		<result property="appCode" column="app_code" jdbcType="VARCHAR" />
+		<result property="appEnv" column="app_env" jdbcType="VARCHAR" />
+		<result property="git" column="git" jdbcType="VARCHAR" />
+		<result property="deployPath" column="deploy_path" jdbcType="VARCHAR" />
+		<result property="healthcheck" column="healthcheck" jdbcType="VARCHAR" />
+		<result property="deployParameters" column="deploy_parameters" jdbcType="VARCHAR" />
+		<result property="pkgName" column="pkg_name" jdbcType="VARCHAR" />
+		<result property="pkgType" column="pkg_type" jdbcType="VARCHAR" />
+		<result property="port" column="app_port" jdbcType="INTEGER" />
+		<result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP" />
+		<result property="delFlag" column="del_flag" jdbcType="INTEGER" />
+		<result property="vmOption" column="vm_option" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<!-- 通用查询结果集合-->
+	<sql id="Base_Column_List">
+	id,	app_code, app_env, git,	deploy_path, healthcheck, deploy_parameters, pkg_name, pkg_type, app_port, gmt_modified, del_flag, vm_option
+	</sql>
+
+	<!-- 公共查询条件-->
+	<!-- collection foreach DATE_FORMAT(create_time,'%Y-%m-%d') like CONCAT('%',#{goodsNo,jdbcType=VARCHAR},'%') -->
+	<!-- <![CDATA[<=]]> date_format(FROM_UNIXTIME(expire_time),'%Y-%c-%d %h:%i:%s') as showExpireTime-->
+
+	<sql id="conditions">
+		<if test="id != null "> and id = #{id,jdbcType=INTEGER} </if>
+		<if test="appCode != null and appCode != '' "> and app_code = #{appCode,jdbcType=VARCHAR} </if>
+		<if test="appEnv != null and appEnv != '' "> and app_env = #{appEnv,jdbcType=VARCHAR} </if>
+		<if test="git != null and git != '' "> and git = #{git,jdbcType=VARCHAR} </if>
+		<if test="deployPath != null and deployPath != '' "> and deploy_path = #{deployPath,jdbcType=VARCHAR} </if>
+		<if test="healthcheck != null and healthcheck != '' "> and healthcheck = #{healthcheck,jdbcType=VARCHAR} </if>
+		<if test="deployParameters != null and deployParameters != '' "> and deploy_parameters = #{deployParameters,jdbcType=VARCHAR} </if>
+		<if test="pkgName != null and pkgName != '' "> and pkg_name = #{pkgName,jdbcType=VARCHAR} </if>
+		<if test="pkgType != null and pkgType != '' "> and pkg_type = #{pkgType,jdbcType=VARCHAR} </if>
+		<if test="port != null "> and app_port = #{port,jdbcType=INTEGER} </if>
+		<if test="gmtModified != null and gmtModified != '' "> and gmt_modified = #{gmtModified,jdbcType=TIMESTAMP} </if>
+		<if test="delFlag != null "> and del_flag = #{delFlag,jdbcType=INTEGER} </if>
+        <if test="vmOption != null"> and vm_option = #{vm_option,jdbcType=VARCHAR} </if>
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM app_deploy_config
+		 WHERE id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 添加 （匹配有值的字段,不建议使用）-->
+	<insert id="insert" parameterType="com.mryx.matrix.process.domain.AppDeployConfig">
+		 INSERT INTO app_deploy_config
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null"> id,</if>
+			<if test="appCode != null"> app_code,</if>
+			<if test="appEnv != null"> app_env,</if>
+			<if test="git != null"> git,</if>
+			<if test="deployPath != null"> deploy_path,</if>
+			<if test="healthcheck != null"> healthcheck,</if>
+			<if test="deployParameters != null"> deploy_parameters,</if>
+			<if test="pkgName != null"> pkg_name,</if>
+			<if test="pkgType != null"> pkg_type,</if>
+			<if test="port != null"> app_port,</if>
+			<if test="gmtModified != null"> gmt_modified,</if>
+			<if test="delFlag != null"> del_flag,</if>
+            <if test="vmOption != null"> vm_option,</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">#{id,jdbcType=INTEGER},</if>
+			<if test="appCode!=null">#{appCode,jdbcType=VARCHAR},</if>
+			<if test="appEnv!=null">#{appEnv,jdbcType=VARCHAR},</if>
+			<if test="git!=null">#{git,jdbcType=VARCHAR},</if>
+			<if test="deployPath!=null">#{deployPath,jdbcType=VARCHAR},</if>
+			<if test="healthcheck!=null">#{healthcheck,jdbcType=VARCHAR},</if>
+			<if test="deployParameters!=null">#{deployParameters,jdbcType=VARCHAR},</if>
+			<if test="pkgName!=null">#{pkgName,jdbcType=VARCHAR},</if>
+			<if test="pkgType!=null">#{pkgType,jdbcType=VARCHAR},</if>
+			<if test="port!=null">#{port,jdbcType=INTEGER},</if>
+			<if test="gmtModified!=null">#{gmtModified,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag!=null">#{delFlag,jdbcType=INTEGER},</if>
+            <if test="vmOption!=null">#{vm_option,jdbcType=VARCHAR},</if>
+		 </trim>
+	</insert>
+
+	<!-- 根据主键修改输入的值-->
+	<update id="updateById" parameterType="com.mryx.matrix.process.domain.AppDeployConfig">
+		 UPDATE app_deploy_config
+ 		 <set> 
+			<if test="appCode != null">app_code = #{appCode,jdbcType=VARCHAR},</if>
+			<if test="appEnv != null">app_env = #{appEnv,jdbcType=VARCHAR},</if>
+			<if test="git != null">git = #{git,jdbcType=VARCHAR},</if>
+			<if test="deployPath != null">deploy_path = #{deployPath,jdbcType=VARCHAR},</if>
+			<if test="healthcheck != null">healthcheck = #{healthcheck,jdbcType=VARCHAR},</if>
+			<if test="deployParameters != null">deploy_parameters = #{deployParameters,jdbcType=VARCHAR},</if>
+			<if test="pkgName != null">pkg_name = #{pkgName,jdbcType=VARCHAR},</if>
+			<if test="pkgType != null">pkg_type = #{pkgType,jdbcType=VARCHAR},</if>
+			<if test="port != null">app_port = #{port,jdbcType=INTEGER},</if>
+			<if test="gmtModified != null">gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag !=null">del_flag = #{delFlag,jdbcType=INTEGER},</if>
+            <if test="vmOption !=null">vm_option = #{vmOption,jdbcType=VARCHAR},</if>
+ 		 </set>
+		 WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 分页查询 -->
+	<select id="listPage" resultMap="BaseResultMap" parameterType="java.util.HashMap" useCache="false">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM app_deploy_config
+		 WHERE 1=1
+		 <include refid="conditions" />
+		 ORDER BY id DESC
+		 limit #{startOfPage},#{pageSize}
+	</select>
+
+	<!-- 分页查询总数 -->
+	<select id="pageTotal" resultType="java.lang.Integer" parameterType="java.util.HashMap" useCache="false">
+		 SELECT
+		 count(*) 
+		 FROM app_deploy_config
+		 WHERE 1=1
+		 <include refid="conditions" />
+	</select>
+
+	<!-- 按条件查询列表 -->
+	<select id="listByCondition" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM app_deploy_config
+		 WHERE 1=1
+		 <include refid="conditions" />
+	</select>
+
+	<!-- 批量提交应用部署信息 -->
+	<insert id="batchUpdateOrInsert" parameterType="java.util.List" useGeneratedKeys="false" keyProperty="id">
+		INSERT INTO app_deploy_config
+		(id,app_code,app_env,git,deploy_path,healthcheck,deploy_parameters,pkg_name,pkg_type,app_port,gmt_modified,del_flag,vm_option)
+		VALUES
+		<foreach collection="list" item="appDeployConfig" index="index" separator="," >
+			(
+			#{appDeployConfig.id,jdbcType=INTEGER},
+
+			<if test="appDeployConfig.appCode != null">#{appDeployConfig.appCode,jdbcType=VARCHAR},</if>
+			<if test="appDeployConfig.appCode == null">' ',</if>
+
+			<if test="appDeployConfig.appEnv != null">#{appDeployConfig.appEnv,jdbcType=VARCHAR},</if>
+			<if test="appDeployConfig.appEnv == null">' ',</if>
+
+			<if test="appDeployConfig.git != null">#{appDeployConfig.git,jdbcType=VARCHAR},</if>
+			<if test="appDeployConfig.git == null">' ',</if>
+
+			<if test="appDeployConfig.deployPath != null">#{appDeployConfig.deployPath,jdbcType=VARCHAR},</if>
+			<if test="appDeployConfig.deployPath == null">' ',</if>
+
+			<if test="appDeployConfig.healthcheck != null">#{appDeployConfig.healthcheck,jdbcType=VARCHAR},</if>
+			<if test="appDeployConfig.healthcheck == null">' ',</if>
+
+			<if test="appDeployConfig.deployParameters != null">#{appDeployConfig.deployParameters,jdbcType=VARCHAR},</if>
+			<if test="appDeployConfig.deployParameters == null">' ',</if>
+
+			<if test="appDeployConfig.pkgName != null">#{appDeployConfig.pkgName,jdbcType=VARCHAR},</if>
+			<if test="appDeployConfig.pkgName == null">' ',</if>
+
+			<if test="appDeployConfig.pkgType != null">#{appDeployConfig.pkgType,jdbcType=VARCHAR},</if>
+			<if test="appDeployConfig.pkgType == null">' ',</if>
+
+			<if test="appDeployConfig.port != null">#{appDeployConfig.port,jdbcType=INTEGER},</if>
+			<if test="appDeployConfig.port == null">0,</if>
+
+			<if test="appDeployConfig.gmtModified != null">#{appDeployConfig.gmtModified,jdbcType=TIMESTAMP},</if>
+			<if test="appDeployConfig.gmtModified == null">0,</if>
+
+            #{appDeployConfig.delFlag,jdbcType=INTEGER},
+
+            <if test="appDeployConfig.vmOption != null">#{appDeployConfig.vmOption,jdbcType=VARCHAR}</if>
+            <if test="appDeployConfig.vmOption == null">''</if>
+
+            )
+		</foreach>
+		ON DUPLICATE KEY UPDATE
+		app_code=VALUES(app_code),
+		app_env=VALUES(app_env),
+		git=VALUES(git),
+		deploy_path=VALUES(deploy_path),
+		healthcheck=VALUES(healthcheck),
+		deploy_parameters=VALUES(deploy_parameters),
+		pkg_name=VALUES(pkg_name),
+		app_port=VALUES(app_port),
+		gmt_modified=VALUES(gmt_modified),
+        del_flag=VALUES(del_flag),
+        vm_option=VALUES(vm_option)
+	</insert>
+</mapper>

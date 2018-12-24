@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.publish.core.dao.ReleaseDelpoyRecordDao">
+
+	<!--通用生产环境部署记录表表映射-->
+	<resultMap id="BaseResultMap" type="com.mryx.matrix.publish.domain.ReleaseDelpoyRecord" >
+		<id property="id" column="id" jdbcType="INTEGER" />
+		<result property="projectId" column="project_id" jdbcType="INTEGER" />
+		<result property="projectTaskId" column="project_task_id" jdbcType="INTEGER" />
+		<result property="forwardRecordId" column="forward_record_id" jdbcType="INTEGER"/>
+		<result property="appCode" column="app_code" jdbcType="VARCHAR" />
+		<result property="appName" column="app_name" jdbcType="VARCHAR" />
+		<result property="appBranch" column="app_branch" jdbcType="VARCHAR" />
+		<result property="appBtag" column="app_btag" jdbcType="VARCHAR" />
+		<result property="appRtag" column="app_rtag" jdbcType="VARCHAR" />
+		<result property="deployStatus" column="deploy_status" jdbcType="INTEGER" />
+		<result property="subDeployStatus" column="sub_deploy_status" jdbcType="INTEGER" />
+		<result property="serviceIps" column="service_ips" jdbcType="VARCHAR" />
+		<result property="publishUser" column="publish_user" jdbcType="VARCHAR" />
+		<result property="logPath" column="log_path" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+		<result property="delFlag" column="del_flag" jdbcType="INTEGER" />
+		<result property="rollbackFlag" column="rollback_flag" jdbcType="INTEGER" />
+	</resultMap>
+
+
+	<!-- 通用查询结果集合-->
+	<sql id="Base_Column_List">
+	id,	project_id,	project_task_id, forward_record_id,	app_code, app_name,	app_branch,	app_btag, app_rtag,	deploy_status, sub_deploy_status,service_ips,publish_user,	log_path, create_time, update_time,	del_flag, rollback_flag
+	</sql>
+
+	<!-- 公共查询条件-->
+	<!-- collection foreach DATE_FORMAT(create_time,'%Y-%m-%d') like CONCAT('%',#{goodsNo,jdbcType=VARCHAR},'%') -->
+	<!-- <![CDATA[<=]]> date_format(FROM_UNIXTIME(expire_time),'%Y-%c-%d %h:%i:%s') as showExpireTime-->
+
+	<sql id="conditions">
+		<if test="id != null "> and id = #{id,jdbcType=INTEGER} </if>
+		<if test="projectId != null "> and project_id = #{projectId,jdbcType=INTEGER} </if>
+		<if test="projectTaskId != null "> and project_task_id = #{projectTaskId,jdbcType=INTEGER} </if>
+		<if test="forwardRecordId != null "> and forward_record_id = #{forwardRecordId,jdbcType=INTEGER} </if>
+		<if test="appCode != null and appCode != '' "> and app_code = #{appCode,jdbcType=VARCHAR} </if>
+		<if test="appName != null and appName != '' "> and app_name = #{appName,jdbcType=VARCHAR} </if>
+		<if test="appBranch != null and appBranch != '' "> and app_branch = #{appBranch,jdbcType=VARCHAR} </if>
+		<if test="appBtag != null and appBtag != '' "> and app_btag = #{appBtag,jdbcType=VARCHAR} </if>
+		<if test="appRtag != null and appRtag != '' "> and app_rtag = #{appRtag,jdbcType=VARCHAR} </if>
+		<if test="deployStatus != null "> and deploy_status = #{deployStatus,jdbcType=INTEGER} </if>
+		<if test="subDeployStatus != null "> and sub_deploy_status = #{subDeployStatus,jdbcType=INTEGER}</if>
+		<if test="serviceIps != null and serviceIps != '' "> and service_ips = #{serviceIps,jdbcType=VARCHAR} </if>
+		<if test="publishUser != null and publishUser != ''">and publish_user = #{publishUser,jdbcType=VARCHAR} </if>
+		<if test="logPath != null and logPath != '' "> and log_path = #{logPath,jdbcType=VARCHAR} </if>
+		<if test="createTime != null and createTime != '' "> and create_time = #{createTime,jdbcType=TIMESTAMP} </if>
+		<if test="updateTime != null and updateTime != '' "> and update_time = #{updateTime,jdbcType=TIMESTAMP} </if>
+		<if test="delFlag != null "> and del_flag = #{delFlag,jdbcType=INTEGER} </if>
+        <if test="rollbackFlag !=null "> and rollback_flag = #{rollbackFlag,jdbcType=INTEGER} </if>
+	</sql>
+
+	<sql id="listConditions">
+		<if test="projectId != null and mode==null"> and project_id like CONCAT('%',#{projectId,jdbcType=INTEGER} ,'%')</if>
+		<if test="projectId != null and mode=='exact'"> and project_id = #{projectId,jdbcType=INTEGER} </if>
+		<if test="appCode != null and appCode != '' and mode==null"> and app_code like CONCAT('%',#{appCode,jdbcType=VARCHAR} ,'%') </if>
+		<if test="appCode != null and appCode != '' and mode=='exact'"> and app_code = #{appCode,jdbcType=VARCHAR} </if>
+		<if test="appBtag != null and appBtag != '' "> and app_btag like CONCAT('%',#{appBtag,jdbcType=VARCHAR} ,'%') </if>
+		<if test="deployStatus != null "> and deploy_status = #{deployStatus,jdbcType=INTEGER} </if>
+        <if test="rollbackFlag != null "> and rollback_flag = #{rollbackFlag,jdbcType=INTEGER} </if>
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM release_delpoy_record
+		 WHERE id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="getByRecordId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM release_delpoy_record
+		WHERE forward_record_id = #{recordId,jdbcType=INTEGER}
+	</select>
+
+	<select id="getByProjectId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM release_delpoy_record
+		WHERE
+		project_id = #{projectId,jdbcType=INTEGER} and
+		deploy_status = 6 and
+		forward_record_id = 0
+		order by id desc
+		limit 1
+	</select>
+
+	<!-- 添加 （匹配有值的字段,不建议使用）-->
+	<insert id="insert" parameterType="com.mryx.matrix.publish.domain.ReleaseDelpoyRecord" useGeneratedKeys="true" keyProperty="id">
+		 INSERT INTO release_delpoy_record
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null"> id,</if>
+			<if test="projectId != null"> project_id,</if>
+			<if test="projectTaskId != null"> project_task_id,</if>
+		    <if test="forwardRecordId != null"> forward_record_id,</if>
+			<if test="appCode != null"> app_code,</if>
+			<if test="appName != null"> app_name,</if>
+			<if test="appBranch != null"> app_branch,</if>
+			<if test="appBtag != null"> app_btag,</if>
+			<if test="appRtag != null"> app_rtag,</if>
+			<if test="deployStatus != null"> deploy_status,</if>
+		    <if test="subDeployStatus != null "> sub_deploy_status,</if>
+			<if test="serviceIps != null"> service_ips,</if>
+			<if test="publishUser != null"> publish_user,</if>
+			<if test="logPath != null">log_path,</if>
+			<if test="createTime != null"> create_time,</if>
+			<if test="updateTime != null"> update_time,</if>
+			<if test="delFlag != null"> del_flag,</if>
+		    <if test="rollbackFlag != null"> rollback_flag,</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">#{id,jdbcType=INTEGER},</if>
+			<if test="projectId!=null">#{projectId,jdbcType=INTEGER},</if>
+			<if test="projectTaskId!=null">#{projectTaskId,jdbcType=INTEGER},</if>
+		    <if test="forwardRecordId!=null">#{forwardRecordId,jdbcType=INTEGER},</if>
+		    <if test="appCode!=null">#{appCode,jdbcType=VARCHAR},</if>
+			<if test="appName!=null">#{appName,jdbcType=VARCHAR},</if>
+			<if test="appBranch!=null">#{appBranch,jdbcType=VARCHAR},</if>
+			<if test="appBtag!=null">#{appBtag,jdbcType=VARCHAR},</if>
+			<if test="appRtag!=null">#{appRtag,jdbcType=VARCHAR},</if>
+			<if test="deployStatus!=null">#{deployStatus,jdbcType=INTEGER},</if>
+		    <if test="subDeployStatus != null ">#{subDeployStatus,jdbcType=INTEGER},</if>
+		    <if test="serviceIps!=null">#{serviceIps,jdbcType=VARCHAR},</if>
+			<if test="publishUser!=null">#{publishUser,jdbcType=VARCHAR},</if>
+		    <if test="logPath!= null">#{logPath,jdbcType=VARCHAR},</if>
+		    <if test="createTime!=null">#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime!=null">#{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag!=null">#{delFlag,jdbcType=INTEGER},</if>
+		    <if test="rollbackFlag!=null">#{rollbackFlag,jdbcType=INTEGER},</if>
+		 </trim>
+	</insert>
+
+	<!-- 根据主键修改输入的值-->
+	<update id="updateById" parameterType="com.mryx.matrix.publish.domain.ReleaseDelpoyRecord">
+		 UPDATE release_delpoy_record
+ 		 <set> 
+			<if test="projectId != null">project_id = #{projectId,jdbcType=INTEGER},</if>
+			<if test="projectTaskId != null">project_task_id = #{projectTaskId,jdbcType=INTEGER},</if>
+		    <if test="forwardRecordId != null ">forward_record_id = #{forwardRecordId,jdbcType=INTEGER} ,</if>
+		    <if test="appCode != null">app_code = #{appCode,jdbcType=VARCHAR},</if>
+			<if test="appName != null">app_name = #{appName,jdbcType=VARCHAR},</if>
+			<if test="appBranch != null">app_branch = #{appBranch,jdbcType=VARCHAR},</if>
+			<if test="appBtag != null">app_btag = #{appBtag,jdbcType=VARCHAR},</if>
+			<if test="appRtag != null">app_rtag = #{appRtag,jdbcType=VARCHAR},</if>
+			<if test="deployStatus != null">deploy_status = #{deployStatus,jdbcType=INTEGER},</if>
+		    <if test="subDeployStatus != null ">sub_deploy_status = #{subDeployStatus,jdbcType=INTEGER},</if>
+		    <if test="serviceIps != null">service_ips = #{serviceIps,jdbcType=VARCHAR},</if>
+			<if test="publishUser!=null">publish_user = #{publishUser,jdbcType=VARCHAR},</if>
+		    <if test="logPath != null ">log_path = #{logPath,jdbcType=VARCHAR}, </if>
+		    <if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null">del_flag = #{delFlag,jdbcType=INTEGER},</if>
+		    <if test="rollbackFlag != null">rollback_flag = #{rollbackFlag,jdbcType=INTEGER}, </if>
+ 		 </set>
+		 WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 分页查询 -->
+	<select id="listPage" resultMap="BaseResultMap" parameterType="java.util.HashMap" useCache="false">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM release_delpoy_record
+		 WHERE 1=1
+		 <include refid="listConditions" />
+		 ORDER BY id DESC
+		 limit #{startOfPage},#{pageSize}
+	</select>
+
+	<!-- 分页查询总数 -->
+	<select id="pageTotal" resultType="java.lang.Integer" parameterType="java.util.HashMap" useCache="false">
+		 SELECT
+		 count(*) 
+		 FROM release_delpoy_record
+		 WHERE 1=1
+		 <include refid="listConditions" />
+	</select>
+
+	<!-- 按条件查询列表 -->
+	<select id="listByCondition" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM release_delpoy_record
+		 WHERE 1=1
+		 <include refid="conditions" />
+	</select>
+
+	<insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO release_delpoy_record
+		(project_id,project_task_id,forward_record_id,app_code,app_name,app_branch,app_btag,app_rtag,deploy_status,service_ips,publish_user,log_path)
+		VALUE
+		<foreach collection="list" item="releaseDelpoyRecord" index="index" separator="," open="(" close=")">
+			#{releaseDelpoyRecord.projectId,jdbcType=INTEGER},
+			#{releaseDelpoyRecord.projectTaskId,jdbcType=INTEGER},
+			<if test="releaseDelpoyRecord.forwardRecordId != null">#{releaseDelpoyRecord.forwardRecordId,jdbcType=INTEGER},</if>
+			<if test="releaseDelpoyRecord.forwardRecordId == null">0,</if>
+			#{releaseDelpoyRecord.appCode,jdbcType=VARCHAR},
+			#{releaseDelpoyRecord.appName,jdbcType=VARCHAR},
+			#{releaseDelpoyRecord.appBranch,jdbcType=VARCHAR},
+			#{releaseDelpoyRecord.appBtag,jdbcType=VARCHAR},
+			#{releaseDelpoyRecord.appRtag,jdbcType=VARCHAR},
+			#{releaseDelpoyRecord.deployStatus,jdbcType=INTEGER},
+			#{releaseDelpoyRecord.serviceIps,jdbcType=VARCHAR},
+			#{releaseDelpoyRecord.publishUser,jdbcType=VARCHAR},
+			#{releaseDelpoyRecord.logPath,jdbcType=VARCHAR}
+		</foreach>
+	</insert>
+
+	<update id="deleteById" parameterType="com.mryx.matrix.publish.domain.ReleaseDelpoyRecord">
+		UPDATE release_delpoy_record
+		SET del_flag = 0
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="batchDelete" parameterType="java.util.List">
+		UPDATE release_delpoy_record
+		SET del_flag = 0
+		WHERE id IN
+		<foreach collection="list" index="index" item="releaseDelpoyRecord" separator="," open="(" close=")">
+			#{releaseDelpoyRecord.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+
+	<select id="listByCodeStatus" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM release_delpoy_record
+		WHERE
+		app_code = #{appCode,jdbcType=VARCHAR}
+		and deploy_status in (6,7,11,13)
+	</select>
+
+	<select id="listByProjectStatus" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM release_delpoy_record
+		WHERE
+		project_id = #{projectId,jdbcType=INTEGER}
+		<if test="rollbackFlag!=null"> and rollback_flag=#{rollbackFlag,jdbcType=INTEGER}</if>
+		and deploy_status in (6,7,11,13)
+	</select>
+
+	<select id="getByLastId" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM release_delpoy_record
+		WHERE
+		project_task_id = #{projectTaskId,jdbcType=INTEGER}
+		order by id desc
+		limit 1
+	</select>
+
+</mapper>

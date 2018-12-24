@@ -1,0 +1,42 @@
+package: matrix-agent
+import:
+- package: github.com/gin-gonic/gin
+  version: ^1.3.0
+- package: github.com/robfig/cron
+  version: ^1.1.0
+- package: github.com/json-iterator/go
+- package: github.com/streadway/amqp
+- package: github.com/hpcloud/tail
+- package: github.com/shirou/gopsutil
+  version: ^2.18.7
+  subpackages:
+  - cpu
+  - disk
+  - host
+  - load
+  - mem
+- package: golang.org/x/crypto
+  repo: https://github.com/golang/crypto.git
+  vcs: git
+- package: golang.org/x/sys
+  repo: https://github.com/golang/sys.git
+  vcs: git
+- package: golang.org/x/net
+  repo: https://github.com/golang/net.git
+  vcs: git
+- package: golang.org/x/text
+  repo: https://github.com/golang/text.git
+  vcs: git
+- package: gopkg.in/src-d/go-git.v4
+  version: ^4.7.0
+  subpackages:
+  - config
+  - plumbing
+  - plumbing/object
+  - plumbing/transport
+  - plumbing/transport/client
+  - plumbing/transport/http
+  - plumbing/transport/ssh
+- package: gopkg.in/yaml.v2
+  version: ^2.2.1
+

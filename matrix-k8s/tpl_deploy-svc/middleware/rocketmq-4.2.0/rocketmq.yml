@@ -1,0 +1,113 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rocketmq
+  namespace: DEPLOY_ENV
+  labels:
+    app: rocketmq
+spec:
+  replicas: 1
+  template:
+    metadata:
+     labels:
+       app: rocketmq
+    spec:
+      containers:
+      - name: broker
+        image: harbor.missfresh.net/library/rocketmq-broker:4.2.0-k8s
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 10909
+          - containerPort: 10911
+        volumeMounts:
+          - mountPath: /opt/logs
+            name: brokeroptlogs
+          - mountPath: /opt/store
+            name: brokeroptstore
+        env:
+          - name: NAMESRV_ADDR # 用于指定server
+            value: "localhost:9876"
+      - name: namesrv
+        image: harbor.missfresh.net/library/rocketmq-namesrv:4.2.0-k8s
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 9876
+        volumeMounts:
+          - mountPath: /opt/logs
+            name: namesrvoptlogs
+          - mountPath: /opt/store
+            name: namesrvoptstore
+        env:
+          - name: JAVA_OPT_EXT
+            value: "-server -Xms128m -Xmx256m -Xmn128m"
+      volumes:
+      - name: brokeroptlogs
+        hostPath:
+          path: /data/broker/logs
+      - name: brokeroptstore
+        hostPath:
+          path: /data/broker/store
+      - name: namesrvoptlogs
+        hostPath:
+          path: /data/namesrv/logs
+      - name: namesrvoptstore
+        hostPath:
+          path: /data/namesrv/store
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: rocketmq
+  namespace: DEPLOY_ENV
+  labels:
+    app: rocketmq
+spec:
+  type: ClusterIP
+  ports:
+   - name: http
+     protocol: TCP
+     port: 9876
+     targetPort: 9876
+  selector:
+    app: rocketmq
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rocketmq-console-ng
+  namespace: DEPLOY_ENV
+  labels:
+    app: rocketmq-console-ng
+spec:
+  replicas: 1
+  template:
+    metadata:
+     labels:
+       app: rocketmq-console-ng
+    spec:
+      containers:
+      - name: rocketmq-console-ng
+        image: styletang/rocketmq-console-ng
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
+        env:
+          - name: JAVA_OPTS
+            value: "-Drocketmq.config.namesrvAddr=rocketmq.DEPLOY_ENV:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: rocketmq-console-ng
+  namespace: DEPLOY_ENV
+  labels:
+    app: rocketmq-console-ng
+spec:
+  type: NodePort
+  ports:
+   - name: http
+     protocol: TCP
+     port: 80
+     targetPort: 8080
+  selector:
+    app: rocketmq-console-ng

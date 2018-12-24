@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.process.core.dao.ProjectDao">
+
+	<!--通用应用发布工单表表映射-->
+	<resultMap id="BaseResultMap" type="com.mryx.matrix.process.domain.Project" >
+		<id property="id" column="id" jdbcType="INTEGER" />
+		<result property="projectName" column="project_name" jdbcType="VARCHAR" />
+		<result property="projectPriority" column="project_priority" jdbcType="INTEGER" />
+		<result property="description" column="description" jdbcType="VARCHAR" />
+		<result property="projectType" column="project_type" jdbcType="INTEGER" />
+		<result property="projectStatus" column="project_status" jdbcType="INTEGER" />
+		<result property="pmOwner" column="pm_owner" jdbcType="VARCHAR" />
+		<result property="devOwner" column="dev_owner" jdbcType="VARCHAR" />
+		<result property="qaOwner" column="qa_owner" jdbcType="VARCHAR" />
+		<result property="projectMember" column="project_member" jdbcType="VARCHAR" />
+		<result property="planStartTime" column="plan_start_time" jdbcType="TIMESTAMP" />
+		<result property="planTestTime" column="plan_test_time" jdbcType="TIMESTAMP" />
+		<result property="planPublishTime" column="plan_publish_time" jdbcType="TIMESTAMP" />
+		<result property="actualStartTime" column="actual_start_time" jdbcType="TIMESTAMP" />
+		<result property="actualTestTime" column="actual_test_time" jdbcType="TIMESTAMP" />
+		<result property="actualPublishTime" column="actual_publish_time" jdbcType="TIMESTAMP" />
+		<result property="testDescribe" column="test_describe" jdbcType="LONGVARCHAR" />
+		<result property="publishDescribe" column="publish_describe" jdbcType="LONGVARCHAR" />
+		<result property="createUser" column="create_user" jdbcType="VARCHAR" />
+		<result property="updateUser" column="update_user" jdbcType="VARCHAR" />
+		<result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+		<result property="delFlag" column="del_flag" jdbcType="INTEGER" />
+		<result property="auditor" column="auditor" jdbcType="VARCHAR" />
+		<result property="auditStatus" column="audit_status" jdbcType="INTEGER" />
+        <result property="businessLinesDb" column="business_lines" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<!-- 通用查询结果集合-->
+	<sql id="Base_Column_List">
+	id,	project_name, project_priority,	description, project_type, project_status, pm_owner, dev_owner,	qa_owner, project_member, plan_start_time, plan_test_time, plan_publish_time, actual_start_time, actual_test_time, actual_publish_time, test_describe, publish_describe, create_user, update_user, create_time, update_time, del_flag, auditor, audit_status, business_lines
+	</sql>
+
+	<!-- 公共查询条件-->
+	<!-- collection foreach DATE_FORMAT(create_time,'%Y-%m-%d') like CONCAT('%',#{goodsNo,jdbcType=VARCHAR},'%') -->
+	<!-- <![CDATA[<=]]> date_format(FROM_UNIXTIME(expire_time),'%Y-%c-%d %h:%i:%s') as showExpireTime-->
+
+	<sql id="conditions">
+		<if test="id != null "> and id = #{id,jdbcType=INTEGER} </if>
+		<if test="projectName != null and projectName != '' "> and project_name like CONCAT(CONCAT('%', #{projectName,jdbcType=VARCHAR}), '%') </if>
+		<if test="projectPriority != null "> and project_priority = #{projectPriority,jdbcType=INTEGER} </if>
+		<if test="description != null and description != '' "> and description = #{description,jdbcType=VARCHAR} </if>
+		<if test="projectType != null "> and project_type = #{projectType,jdbcType=INTEGER} </if>
+		<if test="projectStatus != null "> and project_status = #{projectStatus,jdbcType=INTEGER} </if>
+		<if test="pmOwner != null and pmOwner != '' "> and pm_owner = #{pmOwner,jdbcType=VARCHAR} </if>
+		<if test="devOwner != null and devOwner != '' "> and dev_owner = #{devOwner,jdbcType=VARCHAR} </if>
+		<if test="qaOwner != null and qaOwner != '' "> and qa_owner = #{qaOwner,jdbcType=VARCHAR} </if>
+		<if test="projectMember != null and projectMember != '' "> and project_member = #{projectMember,jdbcType=VARCHAR} </if>
+		<if test="planStartTime != null and planStartTime != '' "> and plan_start_time = #{planStartTime,jdbcType=TIMESTAMP} </if>
+		<if test="planTestTime != null and planTestTime != '' "> and plan_test_time = #{planTestTime,jdbcType=TIMESTAMP} </if>
+		<if test="planPublishTime != null and planPublishTime != '' "> and plan_publish_time = #{planPublishTime,jdbcType=TIMESTAMP} </if>
+		<if test="actualStartTime != null and actualStartTime != '' "> and actual_start_time = #{actualStartTime,jdbcType=TIMESTAMP} </if>
+		<if test="actualTestTime != null and actualTestTime != '' "> and actual_test_time = #{actualTestTime,jdbcType=TIMESTAMP} </if>
+		<if test="actualPublishTime != null and actualPublishTime != '' "> and actual_publish_time = #{actualPublishTime,jdbcType=TIMESTAMP} </if>
+		<if test="testDescribe != null and testDescribe != '' "> and test_describe = #{testDescribe,jdbcType=LONGVARCHAR} </if>
+		<if test="publishDescribe != null and publishDescribe != '' "> and publish_describe = #{publishDescribe,jdbcType=LONGVARCHAR} </if>
+		<if test="createUser != null and createUser != '' "> and create_user = #{createUser,jdbcType=VARCHAR} </if>
+		<if test="updateUser != null and updateUser != '' "> and update_user = #{updateUser,jdbcType=VARCHAR} </if>
+		<if test="createTime != null and createTime != '' "> and create_time = #{createTime,jdbcType=TIMESTAMP} </if>
+		<if test="updateTime != null and updateTime != '' "> and update_time = #{updateTime,jdbcType=TIMESTAMP} </if>
+		<if test="delFlag != null "> and del_flag = #{delFlag,jdbcType=INTEGER} </if>
+		<if test="auditor != null "> and anditor = #{auditor,jdbcType=VARCHAR} </if>
+        <if test="auditStatus != null"> and audit_status = #{auditStatus,jdbcType=INTEGER} </if>
+        <if test="businessLinesDb != null"> and business_lines = #{businessLinesDb,jdbcType=VARCHAR} </if>
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM project
+		 WHERE id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 添加 （匹配有值的字段,不建议使用）-->
+	<insert id="insert" parameterType="com.mryx.matrix.process.domain.Project" useGeneratedKeys="true" keyProperty="id">
+		 INSERT INTO project
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null"> id,</if>
+			<if test="projectName != null"> project_name,</if>
+			<if test="projectPriority != null"> project_priority,</if>
+			<if test="description != null"> description,</if>
+			<if test="projectType != null"> project_type,</if>
+			<if test="projectStatus != null"> project_status,</if>
+			<if test="pmOwner != null"> pm_owner,</if>
+			<if test="devOwner != null"> dev_owner,</if>
+			<if test="qaOwner != null"> qa_owner,</if>
+			<if test="projectMember != null"> project_member,</if>
+			<if test="planStartTime != null"> plan_start_time,</if>
+			<if test="planTestTime != null"> plan_test_time,</if>
+			<if test="planPublishTime != null"> plan_publish_time,</if>
+			<if test="actualStartTime != null"> actual_start_time,</if>
+			<if test="actualTestTime != null"> actual_test_time,</if>
+			<if test="actualPublishTime != null"> actual_publish_time,</if>
+			<if test="testDescribe != null"> test_describe,</if>
+			<if test="publishDescribe != null"> publish_describe,</if>
+			<if test="createUser != null"> create_user,</if>
+			<if test="updateUser != null"> update_user,</if>
+			<if test="createTime != null"> create_time,</if>
+			<if test="updateTime != null"> update_time,</if>
+			<if test="delFlag != null"> del_flag,</if>
+			<if test="auditor != null"> auditor,</if>
+            <if test="auditStatus !=null"> audit_status,</if>
+            <if test="businessLinesDb !=null"> business_lines,</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">#{id,jdbcType=INTEGER},</if>
+			<if test="projectName!=null">#{projectName,jdbcType=VARCHAR},</if>
+			<if test="projectPriority!=null">#{projectPriority,jdbcType=INTEGER},</if>
+			<if test="description!=null">#{description,jdbcType=VARCHAR},</if>
+			<if test="projectType!=null">#{projectType,jdbcType=INTEGER},</if>
+			<if test="projectStatus!=null">#{projectStatus,jdbcType=INTEGER},</if>
+			<if test="pmOwner!=null">#{pmOwner,jdbcType=VARCHAR},</if>
+			<if test="devOwner!=null">#{devOwner,jdbcType=VARCHAR},</if>
+			<if test="qaOwner!=null">#{qaOwner,jdbcType=VARCHAR},</if>
+			<if test="projectMember!=null">#{projectMember,jdbcType=VARCHAR},</if>
+			<if test="planStartTime!=null">#{planStartTime,jdbcType=TIMESTAMP},</if>
+			<if test="planTestTime!=null">#{planTestTime,jdbcType=TIMESTAMP},</if>
+			<if test="planPublishTime!=null">#{planPublishTime,jdbcType=TIMESTAMP},</if>
+			<if test="actualStartTime!=null">#{actualStartTime,jdbcType=TIMESTAMP},</if>
+			<if test="actualTestTime!=null">#{actualTestTime,jdbcType=TIMESTAMP},</if>
+			<if test="actualPublishTime!=null">#{actualPublishTime,jdbcType=TIMESTAMP},</if>
+			<if test="testDescribe!=null">#{testDescribe,jdbcType=LONGVARCHAR},</if>
+			<if test="publishDescribe!=null">#{publishDescribe,jdbcType=LONGVARCHAR},</if>
+			<if test="createUser!=null">#{createUser,jdbcType=VARCHAR},</if>
+			<if test="updateUser!=null">#{updateUser,jdbcType=VARCHAR},</if>
+			<if test="createTime!=null">#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime!=null">#{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag!=null">#{delFlag,jdbcType=INTEGER},</if>
+			<if test="auditor!=null">#{auditor,jdbcType=VARCHAR},</if>
+            <if test="auditStatus!=null">#{auditStatus,jdbcType=INTEGER},</if>
+            <if test="businessLinesDb!=null">#{businessLinesDb,jdbcType=VARCHAR},</if>
+		 </trim>
+	</insert>
+
+	<!-- 根据主键修改输入的值-->
+	<update id="updateById" parameterType="com.mryx.matrix.process.domain.Project">
+		 UPDATE project
+ 		 <set> 
+			<if test="projectName != null">project_name = #{projectName,jdbcType=VARCHAR},</if>
+			<if test="projectPriority != null">project_priority = #{projectPriority,jdbcType=INTEGER},</if>
+			<if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
+			<if test="projectType != null">project_type = #{projectType,jdbcType=INTEGER},</if>
+			<if test="projectStatus != null">project_status = #{projectStatus,jdbcType=INTEGER},</if>
+			<if test="pmOwner != null">pm_owner = #{pmOwner,jdbcType=VARCHAR},</if>
+			<if test="devOwner != null">dev_owner = #{devOwner,jdbcType=VARCHAR},</if>
+			<if test="qaOwner != null">qa_owner = #{qaOwner,jdbcType=VARCHAR},</if>
+			<if test="projectMember != null">project_member = #{projectMember,jdbcType=VARCHAR},</if>
+			<if test="planStartTime != null">plan_start_time = #{planStartTime,jdbcType=TIMESTAMP},</if>
+			<if test="planTestTime != null">plan_test_time = #{planTestTime,jdbcType=TIMESTAMP},</if>
+			<if test="planPublishTime != null">plan_publish_time = #{planPublishTime,jdbcType=TIMESTAMP},</if>
+			<if test="actualStartTime != null">actual_start_time = #{actualStartTime,jdbcType=TIMESTAMP},</if>
+			<if test="actualTestTime != null">actual_test_time = #{actualTestTime,jdbcType=TIMESTAMP},</if>
+			<if test="actualPublishTime != null">actual_publish_time = #{actualPublishTime,jdbcType=TIMESTAMP},</if>
+			<if test="testDescribe != null">test_describe = #{testDescribe,jdbcType=LONGVARCHAR},</if>
+			<if test="publishDescribe != null">publish_describe = #{publishDescribe,jdbcType=LONGVARCHAR},</if>
+			<if test="createUser != null">create_user = #{createUser,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">update_user = #{updateUser,jdbcType=VARCHAR},</if>
+			<if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null">del_flag = #{delFlag,jdbcType=INTEGER},</if>
+			<if test="auditor != null">auditor = #{auditor,jdbcType=VARCHAR},</if>
+            <if test="auditStatus !=null">audit_status = #{auditStatus,jdbcType=INTEGER},</if>
+            <if test="businessLinesDb !=null">business_lines = #{businessLinesDb,jdbcType=VARCHAR},</if>
+			<if test="businessLinesDb ==null">business_lines = ''</if>
+ 		 </set>
+		 WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 分页查询 -->
+	<select id="listPage" resultMap="BaseResultMap" parameterType="java.util.HashMap" useCache="false">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM project
+		 <if test="isMine!=null and isMine==true"><include refid="mySpaceCondition" /></if>
+		 WHERE 1=1
+		 <include refid="conditions" />
+		 ORDER BY id DESC
+		 limit #{startOfPage},#{pageSize}
+	</select>
+
+	<!-- 分页查询总数 -->
+	<select id="pageTotal" resultType="java.lang.Integer" parameterType="java.util.HashMap" useCache="false">
+		 SELECT
+		 count(*) 
+		 FROM project
+		 <if test="isMine!=null and isMine==true"><include refid="mySpaceCondition" /></if>
+		 WHERE 1=1
+		 <include refid="conditions" />
+	</select>
+
+
+	<!-- 按条件查询列表 -->
+	<select id="listByCondition" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM project
+		<if test="isMine!=null and isMine==true"><include refid="mySpaceCondition" /></if>
+		 WHERE 1=1
+		 <include refid="conditions" />
+		ORDER BY id DESC
+		limit #{startOfPage},#{pageSize}
+	</select>
+
+	<select id="countProjectDTOTotal" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+		SELECT
+		count(*)
+		FROM project
+		WHERE 1=1
+		<include refid="conditions" />
+	</select>
+
+	<select id="listProjectDTOPage" resultType="com.mryx.matrix.process.dto.ProjectDTO" parameterType="com.mryx.matrix.process.dto.ProjectDTO">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM project
+		WHERE 1=1
+		<include refid="conditions" />
+		ORDER BY id DESC
+		limit #{startOfPage},#{pageSize}
+	</select>
+
+	<!--<sql id="mySpaceCondition">-->
+		<!--RIGHT JOIN (-->
+		<!--SELECT id AS project_id FROM project WHERE create_user = #{queryUserAccount,jdbcType=VARCHAR} OR update_user = #{queryUserAccount,jdbcType=VARCHAR} OR pm_owner = #{queryUserName,jdbcType=VARCHAR} OR dev_owner = #{queryUserName,jdbcType=VARCHAR} OR qa_owner = #{queryUserName,jdbcType=VARCHAR} UNION-->
+		<!--SELECT DISTINCT project_id FROM beta_delpoy_record WHERE publish_user = #{queryUserAccount,jdbcType=VARCHAR} AND project_id>0 UNION-->
+		<!--SELECT DISTINCT project_id FROM release_delpoy_record WHERE publish_user = #{queryUserAccount,jdbcType=VARCHAR} AND project_id>0 ) AS temp ON  project.id = temp.project_id-->
+	<!--</sql>-->
+
+	<sql id="mySpaceCondition">
+		RIGHT JOIN (
+		SELECT id AS project_id FROM project WHERE create_user = #{queryUserAccount,jdbcType=VARCHAR} OR update_user = #{queryUserAccount,jdbcType=VARCHAR} OR pm_owner = #{queryUserName,jdbcType=VARCHAR} OR dev_owner = #{queryUserName,jdbcType=VARCHAR} OR qa_owner = #{queryUserName,jdbcType=VARCHAR} UNION
+		SELECT id AS project_id FROM project WHERE id IN
+		<foreach item="item" index="index" collection="queryProjectIds"
+				 open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		)
+		AS temp ON project.id = temp.project_id
+	</sql>
+</mapper>

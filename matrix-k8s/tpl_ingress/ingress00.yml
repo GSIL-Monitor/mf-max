@@ -1,0 +1,656 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-DEPLOY_ENV ## 不需要改动，会出现在对应的namespace的ingress列表下
+  namespace: DEPLOY_ENV # 变量 -根据命名规范进行替换，例如b1, b2等
+  annotations:
+    kubernetes.io/ingress.class: qcloud
+spec:
+  rules:
+### test #######
+  - host: helloworld.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: helloworld
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+
+### middleware #######
+  - host: rabbitmq.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: rabbitmq
+          servicePort: 15672
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: rocketmq-console-ng.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: rocketmq-console-ng
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+
+######################
+### 6. 物流服务 ####
+######################
+  - host: wuliu-gms-back.DEPLOY_ENV.missfresh.net # gms对外暴漏的域名
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-gms-back
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-eureka.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-eureka
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-config.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-config
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-auth.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-auth
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-gateway.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-gateway
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-service-uac.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-service-uac
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-gms-vue.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-gms-vue
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-deliver-oauth.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-deliver-oauth
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-grampus-equ.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-grampus-equ
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-pangu.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-pangu
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-thor.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-thor
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-wms-external-controller.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-wms-external-controller
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-wms-external-impl.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-wms-external-impl
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-wms-internalwarehouse-controller.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-wms-internalwarehouse-controller
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-wms-internalwarehouse-impl.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-wms-internalwarehouse-impl
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-wms-order-controller.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-wms-order-controller
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-wms-order-impl.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-wms-order-impl
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-wms-replenishment-controller.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-wms-replenishment-controller
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-wms-replenishment-impl.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-wms-replenishment-impl
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-wms-report-controller.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-wms-report-controller
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-wms-report-impl.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-wms-report-impl
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-wms-stock-controller.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-wms-stock-controller
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-wms-stock-impl.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-wms-stock-impl
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-wms-task.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-wms-task
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-wms-user-controller.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-wms-user-controller
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-wms-user-impl.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-wms-user-impl
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-settlement-task.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-settlement-task
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-skylark.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-skylark
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-skylarktask.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-skylarktask
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-provider-tms-base.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-provider-tms-base
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-provider-tms-courier.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-provider-tms-courier
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-provider-tms-order.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-provider-tms-order
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-provider-tms-settle.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-provider-tms-settle
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-ocean-service-tms.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-ocean-service-tms
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-wms-t1.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-wms-t1
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-wms-t3.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-wms-t3
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-wms-wwwroot.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-wms-wwwroot
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-atp.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-atp
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-gus-atp.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-gus-atp
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-atpims.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-atpims
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-atp-web.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-atp-web
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-coin-page.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-coin-page
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-coin-project-root.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-coin-project-root
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-gus-project-root.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-gus-project-root
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-gus-receiver-root.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-gus-receiver-root
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-gus-sender-root.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-gus-sender-root
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-gus-task.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-gus-task
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-open-platform-root.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-open-platform-root
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-wl-auth.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-wl-auth
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-wl-auth-page.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-wl-auth-page
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-stone-root.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-stone-root
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-stone-atp-web.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-stone-atp-web
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: 	wuliu-eam-fe.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-eam-fe
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-cloud-fe.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-cloud-fe
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-sms-fe.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-sms-fe
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-tms-fe.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-tms-fe
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: wuliu-atp-center.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: wuliu-atp-center
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+
+######################
+### 9. C端产研 ####
+######################
+  - host: mryx-as-miss.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-as-miss
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-grampus-api.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-grampus-api
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-grampus.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-grampus
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-grampus-trade.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-grampus-trade
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-grampus-user.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-grampus-user
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-grampus-settlement.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-grampus-settlement
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-grampus-afs.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-grampus-afs
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-grampus-recharge.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-grampus-recharge
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-grampus-area.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-grampus-area
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-grampus-enterprise.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-grampus-enterprise
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-grampus-order.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-grampus-order
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-grampus-user-group.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-grampus-user-group
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-mall-manage-provider.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-mall-manage-provider
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-mall-manage-man.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-mall-manage-man
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-grampus-blg-pay.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-grampus-blg-pay
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-as-cart.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-as-cart
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-as-home.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-as-home
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-as-index.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-as-index
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-as-invoice.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-as-invoice
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-as-item.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-as-item
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-as-order.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-as-order
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-as-refund.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-as-refund
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-as-user.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-as-user
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: mryx-missfreshserver.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: mryx-missfreshserver
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+
+
+######################
+### 11. 大数据 ####
+######################
+  - host: alg-data-search-web.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: alg-data-search-web
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: alg-data-search-provider-dubbo.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: alg-data-search-provider-dubbo
+          servicePort: 20880
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+
+######################
+### 16. 基础平台 ####
+######################
+  - host: appcenter.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: appcenter
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: missconf.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: missconf
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: base-missconf-fe.DEPLOY_ENV.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: base-missconf-fe
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+
+
+
+

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.codeanalyzer.core.dao.ProjectPmdScanTaskDao">
+
+    <update id="updatePmdScanTask" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanResult">
+        UPDATE code_scan_result
+        <set>
+            <if test="blocker != null">blocker = #{blocker,jdbcType=INTEGER},</if>
+            <if test="critical != null">critical = #{critical,jdbcType=INTEGER},</if>
+            <if test="major != null">major = #{major,jdbcType=INTEGER},</if>
+            <if test="minor != null">minor = #{minor,jdbcType=INTEGER},</if>
+            <if test="info != null">info = #{info,jdbcType=INTEGER},</if>
+            <if test="status!=null">status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="codeScanResultUrl != null">code_scan_result_url = #{codeScanResultUrl,jdbcType=VARCHAR},</if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateProjectPmdScanTask" parameterType="com.mryx.matrix.codeanalyzer.domain.ProjectPmdScanTask">
+        UPDATE project_pmdscan_task
+        <set>
+            <if test="blocker != null">blocker = #{blocker,jdbcType=INTEGER},</if>
+            <if test="critical != null">critical = #{critical,jdbcType=INTEGER},</if>
+            <if test="major != null">major = #{major,jdbcType=INTEGER},</if>
+            <if test="minor != null">minor = #{minor,jdbcType=INTEGER},</if>
+            <if test="info != null">info = #{info,jdbcType=INTEGER},</if>
+            <if test="status!=null">status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="pmdScanResultUrl != null">pmd_scan_result_url = #{pmdScanResultUrl,jdbcType=VARCHAR},</if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateProjectPmdScanTaskStatus" parameterType="com.mryx.matrix.codeanalyzer.domain.ProjectPmdScanTask">
+        UPDATE project_pmdscan_task
+        <set>
+            <if test="status!=null">status = #{status,jdbcType=INTEGER},</if>
+            <if test="scanTime!=null">scan_time = #{scanTime,jdbcType=TIMESTAMP},</if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updatePmdScanTaskStatus" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanResult">
+        UPDATE code_scan_result
+        <set>
+            <if test="status!=null">status = #{status,jdbcType=INTEGER},
+            </if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <insert id="insertProjectPmdScanTask" parameterType="com.mryx.matrix.codeanalyzer.domain.ProjectPmdScanTask">
+        INSERT INTO project_pmdscan_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="taskName != null">task_name,</if>
+            <if test="appCode != null">app_code,</if>
+            <if test="modeOfScan != null">mode_of_scan,</if>
+            <if test="codeBranch != null">code_branch,</if>
+            <if test="baseVersion !=null">base_version,</if>
+            <if test="compareVersion !=null">compare_version,</if>
+            <if test="timeTrigger !=null">time_trigger,</if>
+            <if test="userName !=null">user_name,</if>
+            <if test="gitAddress !=null">git_address,</if>
+            <if test="blocker != null">blocker,</if>
+            <if test="critical != null">critical,</if>
+            <if test="major != null">major,</if>
+            <if test="minor != null">minor,</if>
+            <if test="info != null">info,</if>
+            <if test="status != null">status,</if>
+            <if test="isMaster != null">is_master,</if>
+            <if test="pmdScanResultUrl != null">pmd_scan_result_url,</if>
+            <if test="blockerResultUrl != null">blocker_result_url,</if>
+            <if test="criticalResultUrl != null">critical_result_url,</if>
+            <if test="majorResultUrl != null">major_result_url,</if>
+            <if test="minorResultUrl != null">minor_result_url,</if>
+            <if test="infoResultUrl != null">info_result_url,</if>
+            <if test="scanTime !=null">scan_time,</if>
+            <if test="createTime !=null">create_time,</if>
+            <if test="updateTime !=null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">#{id,jdbcType=INTEGER},</if>
+            <if test="taskName!=null">#{taskName,jdbcType=VARCHAR},</if>
+            <if test="appCode!=null">#{appCode,jdbcType=VARCHAR},</if>
+            <if test="modeOfScan!=null">#{modeOfScan,jdbcType=INTEGER},</if>
+            <if test="codeBranch!=null">#{codeBranch,jdbcType=VARCHAR},</if>
+            <if test="baseVersion!=null">#{baseVersion,jdbcType=VARCHAR},</if>
+            <if test="compareVersion!=null">#{compareVersion,jdbcType=VARCHAR},</if>
+            <if test="timeTrigger!=null">#{timeTrigger,jdbcType=VARCHAR},</if>
+            <if test="userName!=null">#{userName,jdbcType=VARCHAR},</if>
+            <if test="gitAddress!=null">#{gitAddress,jdbcType=VARCHAR},</if>
+            <if test="blocker!=null">#{blocker,jdbcType=INTEGER},</if>
+            <if test="critical!=null">#{critical,jdbcType=INTEGER},</if>
+            <if test="major!=null">#{major,jdbcType=INTEGER},</if>
+            <if test="minor!=null">#{minor,jdbcType=INTEGER},</if>
+            <if test="info!=null">#{info,jdbcType=INTEGER},</if>
+            <if test="status!=null">#{status,jdbcType=INTEGER},</if>
+            <if test="isMaster!=null">#{isMaster,jdbcType=INTEGER},</if>
+            <if test="pmdScanResultUrl!=null">#{pmdScanResultUrl,jdbcType=VARCHAR},</if>
+            <if test="blockerResultUrl!=null">#{blockerResultUrl,jdbcType=VARCHAR},</if>
+            <if test="criticalResultUrl!=null">#{criticalResultUrl,jdbcType=VARCHAR},</if>
+            <if test="majorResultUrl!=null">#{majorResultUrl,jdbcType=VARCHAR},</if>
+            <if test="minorResultUrl!=null">#{minorResultUrl,jdbcType=VARCHAR},</if>
+            <if test="infoResultUrl!=null">#{infoResultUrl,jdbcType=VARCHAR},</if>
+            <if test="scanTime!=null">#{scanTime,jdbcType=TIMESTAMP},</if>
+            <if test="createTime!=null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime!=null">#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+
+    <select id="getJobIdByAppCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+           SELECT id FROM project_pmdscan_task WHERE app_code = #{appCode,jdbcType=VARCHAR} ORDER BY create_time DESC LIMIT 1;
+    </select>
+
+    <sql id="conditions">
+        <if test="id != null ">and id = #{id,jdbcType=INTEGER}</if>
+        <if test="taskName != null and taskName != '' ">and task_name like '%${taskName}%'</if>
+        <if test="appCode != null and appCode != '' ">and app_code like '%${appCode}%'</if>
+        <if test="modeOfScan != null ">and mode_of_scan = #{modeOfScan,jdbcType=INTEGER}</if>
+        <if test="codeBranch != null and codeBranch != '' ">and code_branch = #{codeBranch,jdbcType=VARCHAR}</if>
+        <if test="userName != null and userName != '' ">and user_name = #{userName,jdbcType=VARCHAR}</if>
+        <if test="createTime != null and createTime != '' ">and create_time = #{createTime,jdbcType=TIMESTAMP}</if>
+        <if test="updateTime != null and updateTime != '' ">and update_time = #{updateTime,jdbcType=TIMESTAMP}</if>
+    </sql>
+
+    <resultMap id="pmdMap" type="com.mryx.matrix.codeanalyzer.domain.ProjectPmdScanTask">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="blocker" property="blocker" jdbcType="INTEGER"/>
+        <result column="critical" property="critical" jdbcType="INTEGER"/>
+        <result column="major" property="major" jdbcType="INTEGER"/>
+        <result column="minor" property="minor" jdbcType="INTEGER"/>
+        <result column="info" property="info" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="task_name" property="taskName" jdbcType="VARCHAR"/>
+        <result column="app_code" property="appCode" jdbcType="VARCHAR"/>
+        <result column="mode_of_scan" property="modeOfScan" jdbcType="SMALLINT"/>
+        <result column="code_branch" property="codeBranch" jdbcType="VARCHAR"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="scan_time" property="scanTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 分页查询总数 -->
+    <select id="pageTotal" parameterType="com.mryx.matrix.codeanalyzer.domain.ProjectPmdScanTask"
+            resultType="java.lang.Integer">
+        SELECT count(*) FROM project_pmdscan_task
+        WHERE 1=1
+        <include refid="conditions"/>
+    </select>
+
+    <!-- 分页查询 -->
+    <select id="getPmdScanTask" resultMap="pmdMap"
+            parameterType="com.mryx.matrix.codeanalyzer.domain.ProjectPmdScanTask">
+        SELECT
+        id,task_name,app_code,mode_of_scan,code_branch,user_name,scan_time,blocker,critical,major,minor,info,status
+        FROM project_pmdscan_task WHERE 1=1
+        <include refid="conditions"/>
+        ORDER BY id DESC
+        limit #{startOfPage},#{pageSize}
+    </select>
+
+</mapper>

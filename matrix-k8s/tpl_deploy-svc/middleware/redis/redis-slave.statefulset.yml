@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-slave
+  namespace: DEPLOY_ENV
+  labels:
+    app: redis-slave
+spec:
+  ports:
+    - port: 6379
+  clusterIP: None
+  selector:
+    app: redis-slave
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: redis-slave
+  namespace: DEPLOY_ENV
+  labels:
+    name: redis-slave
+spec:
+  serviceName: redis-slave
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: redis-slave
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: redis-slave
+        image: harbor.missfresh.net/library/redis:ha-sentinel
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6379
+        env:
+        - name: REDIS_PASS
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: redis-password
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        volumeMounts:
+        - name: redis-volume
+          mountPath: /data
+      imagePullSecrets:
+        - name: registry-secret
+        - name: qcloudregistrykey
+        - name: tencenthubkey
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-volume
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi

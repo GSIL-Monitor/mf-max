@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-sentinel
+  namespace: DEPLOY_ENV
+  labels:
+    name: redis-sentinel
+spec:
+  ports:
+    - port: 26379
+      targetPort: 26379
+  selector:
+    redis-sentinel: "true"
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: redis-sentinel
+  namespace: DEPLOY_ENV
+spec:
+  serviceName: redis-sentinel
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        redis-sentinel: "true"
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: redis-sentinel
+        image: harbor.missfresh.net/library/redis:ha-sentinel
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 26379
+          name: redis-sentinel
+        env:
+          - name: SENTINEL
+            value: "true"
+          - name: REDIS_PASS
+            valueFrom:
+              secretKeyRef:
+                name: redis-secret
+                key: redis-password
+      imagePullSecrets: ## 腾讯云上访问私有仓库使用的secret，不需修改
+        - name: registry-secret
+        - name: qcloudregistrykey
+        - name: tencenthubkey

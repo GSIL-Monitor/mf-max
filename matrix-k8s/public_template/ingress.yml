@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+##############
+# 使用说明
+# 在spec.rules节点下，添加对应应用的信息
+# 1. 修改APP_NAME为应用中心的app_code
+# 2. 保留DEPLOY_ENV，这个变量会自动完成环境的替换
+# 3. 如果一个域名下，有多个应用需要暴露，或者需要暴露不同的path，请参考 https://kubernetes.io/docs/concepts/services-networking/ingress/
+##############
+metadata:
+  name: ingress ## 不需要改动，会出现在对应的namespace的ingress列表下
+  namespace: DEPLOY_ENV # 变量 -根据命名规范进行替换，例如d1, b1等
+  annotations:
+    kubernetes.io/ingress.class: qcloud
+spec:
+  rules:
+  - host: APP_NAME.DEPLOY_ENV.missfresh.net # 应用对外暴露的域名,e.g. app-center.b1.missfresh.net
+    http:
+      paths:
+      - backend:
+          serviceName: APP_NAME
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动
+  - host: ANOTHERE_APP_NAME.DEPLOY_ENV.missfresh.net # 另外一个应用
+    http:
+      paths:
+      - backend:
+          serviceName: ANOTHERE_APP_NAME
+          servicePort: 80
+        path: / ## 必填，不可丢弃，否则ingress无法启动

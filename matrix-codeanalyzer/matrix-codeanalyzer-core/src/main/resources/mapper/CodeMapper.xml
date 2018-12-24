@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.codeanalyzer.core.dao.CodeDao">
+
+    <insert id="insertCodeScanResult" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanResult">
+        INSERT INTO code_scan_result
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="projectTaskId != null">project_task_id,</if>
+            <if test="manualOrAutomatic != null">manual_or_automatic,</if>
+            <if test="gitAddress != null">git_address,</if>
+            <if test="codeBranch != null">code_branch,</if>
+            <if test="codeScanTime != null">code_scan_time,</if>
+            <if test="blocker !=null">blocker,</if>
+            <if test="critical !=null">critical,</if>
+            <if test="major !=null">major,</if>
+            <if test="minor !=null">minor,</if>
+            <if test="info !=null">info,</if>
+            <if test="status !=null">status,</if>
+            <if test="isMaster !=null">is_master,</if>
+            <if test="codeScanResultUrl !=null">code_scan_result_url,</if>
+            <if test="createTime !=null">create_time,</if>
+            <if test="updateTime !=null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">#{id,jdbcType=INTEGER},</if>
+            <if test="projectTaskId!=null">#{projectTaskId,jdbcType=INTEGER},</if>
+            <if test="manualOrAutomatic!=null">#{manualOrAutomatic,jdbcType=INTEGER},</if>
+            <if test="gitAddress!=null">#{gitAddress,jdbcType=VARCHAR},</if>
+            <if test="codeBranch!=null">#{codeBranch,jdbcType=VARCHAR},</if>
+            <if test="codeScanTime!=null">#{codeScanTime,jdbcType=TIMESTAMP},</if>
+            <if test="blocker!=null">#{blocker,jdbcType=INTEGER},</if>
+            <if test="critical!=null">#{critical,jdbcType=INTEGER},</if>
+            <if test="major!=null">#{major,jdbcType=INTEGER},</if>
+            <if test="minor!=null">#{minor,jdbcType=INTEGER},</if>
+            <if test="info!=null">#{info,jdbcType=INTEGER},</if>
+            <if test="status!=null">#{status,jdbcType=INTEGER},</if>
+            <if test="isMaster!=null">#{isMaster,jdbcType=INTEGER},</if>
+            <if test="codeScanResultUrl!=null">#{codeScanResultUrl,jdbcType=VARCHAR},</if>
+            <if test="createTime!=null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime!=null">#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCodeScanStatus" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanResult">
+        UPDATE code_scan_result
+        <set>
+            <if test="blocker != null">blocker = #{blocker,jdbcType=INTEGER},</if>
+            <if test="critical != null">critical = #{critical,jdbcType=INTEGER},</if>
+            <if test="major != null">major = #{major,jdbcType=INTEGER},</if>
+            <if test="minor != null">minor = #{minor,jdbcType=INTEGER},</if>
+            <if test="info != null">info = #{info,jdbcType=INTEGER},</if>
+            <if test="status!=null">status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="isMaster!=null">status = #{isMaster,jdbcType=INTEGER},</if>
+            <if test="codeScanResultUrl != null">code_scan_result_url = #{codeScanResultUrl,jdbcType=VARCHAR},</if>
+            <if test="blockerResultUrl != null">blocker_result_url = #{blockerResultUrl,jdbcType=VARCHAR},</if>
+            <if test="criticalResultUrl != null">critical_result_url = #{criticalResultUrl,jdbcType=VARCHAR},</if>
+            <if test="majorResultUrl != null">major_result_url = #{majorResultUrl,jdbcType=VARCHAR},</if>
+            <if test="minorResultUrl != null">minor_result_url = #{minorResultUrl,jdbcType=VARCHAR},</if>
+            <if test="infoResultUrl != null">info_result_url = #{infoResultUrl,jdbcType=VARCHAR},</if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="getIdByProjectTaskId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT id FROM code_scan_result WHERE project_task_id = #{projectTaskId,jdbcType=INTEGER} ORDER BY code_scan_time DESC LIMIT 1
+    </select>
+
+    <update id="updateMaster" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanResult">
+        UPDATE code_scan_result
+        <set>
+            <if test="isMaster!=null">is_master = #{isMaster,jdbcType=INTEGER},</if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateCodeScanResult" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanResult">
+        UPDATE code_scan_result
+        <set>
+            <if test="codeScanTime != null">code_scan_time = #{codeScanTime,jdbcType=TIMESTAMP},</if>
+            <if test="blocker != null">blocker = #{blocker,jdbcType=INTEGER},</if>
+            <if test="critical != null">critical = #{critical,jdbcType=INTEGER},</if>
+            <if test="major != null">major = #{major,jdbcType=INTEGER},</if>
+            <if test="minor != null">minor = #{minor,jdbcType=INTEGER},</if>
+            <if test="info != null">info = #{info,jdbcType=INTEGER},</if>
+            <if test="status!=null">status = #{status,jdbcType=INTEGER},</if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="getIdByProjectTaskIdAndIsMaster" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+          SELECT id FROM code_scan_result where project_task_id = #{projectTaskId,jdbcType=INTEGER} AND is_master=#{isMaster,jdbcType=INTEGER} AND manual_or_automatic=0 ORDER BY update_time DESC LIMIT 1;
+    </select>
+
+</mapper>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.process.core.dao.UserLdapDao">
+	<select id="getUserName" parameterType="com.mryx.matrix.process.domain.UserLdap" resultType="java.lang.String">
+		SELECT user_name FROM user_ldap WHERE user_name LIKE  #{userName,jdbcType=VARCHAR} '%';
+	</select>
+</mapper>

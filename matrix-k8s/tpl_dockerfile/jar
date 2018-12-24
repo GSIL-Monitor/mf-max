@@ -1,0 +1,11 @@
+# 继承的基础镜像，注意jdk和tomcat版本需要配套
+FROM harbor.missfresh.net/library/java:8u192-jdk
+
+MAINTAINER missfresh.cn
+
+RUN mkdir -p /data/logs
+# 复制必要数据存入镜像
+COPY TARGET_DATA /data/app/TARGET_NAME
+
+# 容器启动的命令，注意使用数组格式，否则会被解析成sh -c cmd，导致启动后容器立即退出
+CMD ["java","-jar","/data/app/TARGET_NAME", "-Dfile.encoding=UTF-8", "--server.port=8080", "--spring.profiles.active=autotest", "--spring.profiles=autotest"]

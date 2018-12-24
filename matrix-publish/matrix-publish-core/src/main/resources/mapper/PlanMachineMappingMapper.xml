@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.publish.core.dao.PlanMachineMappingDao">
+    <resultMap id="BaseResultMap" type="com.mryx.matrix.publish.domain.PlanMachineMapping">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="planId" column="plan_id" jdbcType="INTEGER"/>
+        <result property="projectId" column="project_id" jdbcType="INTEGER"/>
+        <result property="projectTaskId" column="project_task_id" jdbcType="INTEGER"/>
+        <result property="serviceIps" column="service_ips" jdbcType="VARCHAR"/>
+        <result property="hostName" column="host_name" jdbcType="VARCHAR"/>
+        <result property="hostNameCn" column="host_name_cn" jdbcType="VARCHAR"/>
+        <result property="appGroup" column="app_group" jdbcType="VARCHAR"/>
+        <result property="appTag" column="app_tag" jdbcType="VARCHAR"/>
+        <result property="deployStatus" column="deploy_status" jdbcType="INTEGER"/>
+        <result property="disable" column="disable_flag" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="delFlag" column="del_flag" jdbcType="INTEGER"/>
+        <result property="rollbackFlag" column="rollback_flag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,plan_id,project_id,project_task_id,service_ips,host_name,host_name_cn,app_group,app_tag,deploy_status,disable_flag,create_time,update_time,del_flag,rollback_flag
+    </sql>
+
+    <sql id="conditions">
+        <if test="id != null"> and id = #{id,jdbcType=INTEGER}</if>
+        <if test="planId != null"> and plan_id = #{planId,jdbcType=INTEGER}</if>
+        <if test="projectId != null"> and project_id = #{projectId,jdbcType=INTEGER}</if>
+        <if test="projectTaskId != null"> and project_task_id = #{projectTaskId,jdbcType=INTEGER}</if>
+        <if test="serviceIps != null and serviceIps != ''"> and service_ips = #{serviceIps,jdbcType=VARCHAR}</if>
+        <if test="hostName != null and hostName != ''">and host_name = #{hostName,jdbcType=VARCHAR}</if>
+        <if test="hostNameCn != null and hostNameCn != ''">and host_name_cn = #{hostNameCn,jdbcType=VARCHAR}</if>
+        <if test="appGroup != null and appGroup != ''"> and app_group = #{appGroup,jdbcType=VARCHAR}</if>
+        <if test="appTag != null and appTag != ''"> and app_tag = #{appTag,jdbcType=VARCHAR}</if>
+        <if test="deployStatus != null"> and deploy_status = #{deployStatus,jdbcType=INTEGER}</if>
+        <if test="disable != null"> and disable_flag = #{disable,jdbcType=INTEGER}</if>
+        <if test="createTime != null and createTime != ''"> and create_time = #{createTime,jdbcType=TIMESTAMP}</if>
+        <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime,jdbcType=TIMESTAMP}</if>
+        <if test="delFlag != null"> and del_flag = #{delFlag,jdbcType=INTEGER}</if>
+        <if test="rollbackFlag !=null"> and rollback_flag = #{rollbackFlag,jdbcType=INTEGER}</if>
+    </sql>
+
+    <select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM plan_machine_mapping
+        WHERE
+        id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="listPublishByPlanId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM plan_machine_mapping
+        WHERE
+        plan_id = #{planId,jdbcType=INTEGER}
+        and del_flag = 1 and rollback_flag = 0
+    </select>
+
+    <select id="listRollbackByPlanId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM plan_machine_mapping
+        WHERE
+        plan_id = #{planId,jdbcType=INTEGER}
+        and del_flag = 1 and rollback_flag = 1
+    </select>
+
+    <select id="listByCondition" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM plan_machine_mapping
+        WHERE 1=1
+        <include refid="conditions"/>
+    </select>
+
+    <select id="listByPage" resultMap="BaseResultMap" parameterType="java.util.HashMap" useCache="false">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM plan_machine_mapping
+        WHERE 1=1
+        <include refid="conditions"/>
+        ORDER BY id DESC
+        limit #{startOfPage},#{pageSize}
+    </select>
+
+    <select id="pageTotal" resultType="java.lang.Integer" parameterType="java.util.HashMap" useCache="false">
+        SELECT
+        count(*)
+        FROM plan_machine_mapping
+        WHERE 1=1
+        <include refid="conditions"/>
+    </select>
+
+    <update id="updateById" parameterType="com.mryx.matrix.publish.domain.PlanMachineMapping">
+        UPDATE plan_machine_mapping
+        <set>
+            <if test="id != null"> id = #{id,jdbcType=INTEGER},</if>
+            <if test="planId != null"> plan_id = #{planId,jdbcType=INTEGER},</if>
+            <if test="projectId != null"> project_id = #{projectId,jdbcType=INTEGER},</if>
+            <if test="projectTaskId != null"> project_task_id = #{projectTaskId,jdbcType=INTEGER},</if>
+            <if test="serviceIps != null"> service_ips = #{serviceIps,jdbcType=VARCHAR},</if>
+            <if test="hostName != null "> host_name = #{hostName,jdbcType=VARCHAR},</if>
+            <if test="hostNameCn != null "> host_name_cn = #{hostNameCn,jdbcType=VARCHAR},</if>
+            <if test="appGroup != null"> app_group = #{appGroup,jdbcType=VARCHAR},</if>
+            <if test="appTag != null"> app_tag = #{appTag,jdbcType=VARCHAR},</if>
+            <if test="deployStatus != null"> deploy_status = #{deployStatus,jdbcType=INTEGER},</if>
+            <if test="disable != null"> disable_flag = #{disable,jdbcType=INTEGER},</if>
+            <if test="createTime != null"> create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null"> update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="delFlag != null"> del_flag = #{delFlag,jdbcType=INTEGER},</if>
+            <if test="rollbackFlag !=null"> rollback_flag = #{rollbackFlag,jdbcType=INTEGER},</if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <insert id="insert" parameterType="com.mryx.matrix.publish.domain.PlanMachineMapping" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO plan_machine_mapping
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null"> id,</if>
+            <if test="planId != null"> plan_id,</if>
+            <if test="projectId != null"> project_id,</if>
+            <if test="projectTaskId != null"> project_task_id,</if>
+            <if test="serviceIps != null"> service_ips,</if>
+            <if test="hostName != null ">host_name ,</if>
+            <if test="hostNameCn != null ">host_name_cn ,</if>
+            <if test="appGroup != null"> app_group,</if>
+            <if test="appTag != null"> app_tag,</if>
+            <if test="deployStatus != null"> deploy_status,</if>
+            <if test="disable != null"> disable_flag,</if>
+            <if test="createTime != null"> create_time,</if>
+            <if test="updateTime != null"> update_time,</if>
+            <if test="delFlag != null"> del_flag,</if>
+            <if test="rollbackFlag !=null">rollback_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null"> #{id,jdbcType=INTEGER},</if>
+            <if test="planId != null"> #{planId,jdbcType=INTEGER},</if>
+            <if test="projectId != null"> #{projectId,jdbcType=INTEGER},</if>
+            <if test="projectTaskId != null"> #{projectTaskId,jdbcType=INTEGER},</if>
+            <if test="serviceIps != null"> #{serviceIps,jdbcType=VARCHAR},</if>
+            <if test="hostName != null "> #{hostName,jdbcType=VARCHAR},</if>
+            <if test="hostNameCn != null "> #{hostNameCn,jdbcType=VARCHAR},</if>
+            <if test="appGroup != null"> #{appGroup,jdbcType=VARCHAR},</if>
+            <if test="appTag != null"> #{appTag,jdbcType=VARCHAR},</if>
+            <if test="deployStatus != null"> #{deployStatus,jdbcType=INTEGER},</if>
+            <if test="disable != null"> #{disable,jdbcType=INTEGER},</if>
+            <if test="createTime != null"> #{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null"> #{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="delFlag != null"> #{delFlag,jdbcType=INTEGER},</if>
+            <if test="rollbackFlag !=null"> #{rollbackFlag,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByIp" parameterType="com.mryx.matrix.publish.domain.PlanMachineMapping">
+        UPDATE plan_machine_mapping
+        <set>
+            <if test="appTag != null"> app_tag = #{appTag,jdbcType=VARCHAR},</if>
+            <if test="deployStatus != null"> deploy_status = #{deployStatus,jdbcType=INTEGER},</if>
+            <if test="serviceIps != null"> service_ips = #{serviceIps,jdbcType=VARCHAR},</if>
+        </set>
+        WHERE 1=1
+        <if test="planId != null"> and plan_id = #{planId,jdbcType=INTEGER}</if>
+        <if test="projectTaskId != null"> and project_task_id = #{projectTaskId,jdbcType=INTEGER}</if>
+        <if test="serviceIps != null and serviceIps != ''"> and service_ips = #{serviceIps,jdbcType=VARCHAR}</if>
+        <if test=" delFlag != null"> and del_flag = #{delFlag,jdbcType=INTEGER}</if>
+    </update>
+
+    <select id="countUnpublishIps" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+        SELECT
+        count(*)
+        FROM plan_machine_mapping
+        WHERE 1=1
+        <if test="deployStatus != null"> and deploy_status != #{deployStatus,jdbcType=INTEGER}</if>
+        <if test="projectTaskId != null"> and project_task_id = #{projectTaskId,jdbcType=INTEGER}</if>
+        <if test="delFlag != null"> and del_flag = #{delFlag,jdbcType=INTEGER}</if>
+    </select>
+
+    <update id="updateTagAndStstus" parameterType="com.mryx.matrix.publish.domain.PlanMachineMapping">
+        UPDATE plan_machine_mapping
+        SET
+        app_tag = '',
+        deploy_status = 6
+        WHERE 1=1
+        <include refid="conditions"/>
+    </update>
+</mapper>

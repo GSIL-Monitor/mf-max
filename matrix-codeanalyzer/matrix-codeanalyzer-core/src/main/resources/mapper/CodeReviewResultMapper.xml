@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.codeanalyzer.core.dao.CodeReviewResultDao">
+
+    <!--通用代码评审结果记录表表映射-->
+    <resultMap id="BaseResultMap" type="com.mryx.matrix.codeanalyzer.domain.CodeReviewResult">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="projectTaskId" column="project_task_id" jdbcType="INTEGER"/>
+        <result property="codeBranch" column="code_branch" jdbcType="VARCHAR"/>
+        <result property="codeReviewTime" column="code_review_time" jdbcType="TIMESTAMP"/>
+        <result property="codeReviewResult" column="code_review_result" jdbcType="VARCHAR"/>
+        <result property="codeReviewPerson" column="code_review_person" jdbcType="VARCHAR"/>
+        <result property="linkURL" column="link_url" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="getCodeReviewPeople" parameterType="java.lang.Integer" resultType="java.lang.String">
+        SELECT dev_owner FROM project WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getCodeReviewStatus" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT code_review_result FROM code_review_result WHERE project_task_id = #{id,jdbcType=INTEGER} ORDER BY update_time DESC LIMIT 1
+	</select>
+
+    <insert id="insertCodeReviewResult" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeReviewResult">
+        INSERT INTO code_review_result
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="projectTaskId != null">project_task_id,</if>
+            <if test="codeBranch != null">code_branch,</if>
+            <if test="codeReviewTime != null">code_review_time,</if>
+            <if test="codeReviewResult != null">code_review_result,</if>
+            <if test="codeReviewPerson != null">code_review_person,</if>
+            <if test="linkURL != null">link_url,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">#{id,jdbcType=INTEGER},</if>
+            <if test="projectTaskId!=null">#{projectTaskId,jdbcType=INTEGER},</if>
+            <if test="codeBranch!=null">#{codeBranch,jdbcType=VARCHAR},</if>
+            <if test="codeReviewTime!=null">#{codeReviewTime,jdbcType=TIMESTAMP},</if>
+            <if test="codeReviewResult!=null">#{codeReviewResult,jdbcType=VARCHAR},</if>
+            <if test="codeReviewPerson!=null">#{codeReviewPerson,jdbcType=VARCHAR},</if>
+            <if test="linkURL!=null">#{linkURL,jdbcType=VARCHAR},</if>
+            <if test="createTime!=null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime!=null">#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCodeReviewResult" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeReviewResult">
+        UPDATE code_review_result
+        <trim prefix="set" suffixOverrides=",">
+            <if test="codeBranch!=null">code_branch=#{codeBranch,jdbcType=VARCHAR},</if>
+            <if test="codeReviewTime!=null">code_review_time=#{codeReviewTime,jdbcType=TIMESTAMP},</if>
+            code_review_result=#{codeReviewResult,jdbcType=VARCHAR},
+            <if test="codeReviewPerson!=null">code_review_person=#{codeReviewPerson,jdbcType=VARCHAR},</if>
+            <if test="linkURL!=null">link_url=#{linkURL,jdbcType=VARCHAR},</if>
+            <if test="createTime!=null">create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime!=null">update_time=#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+        WHERE project_task_id=#{projectTaskId,jdbcType=INTEGER} ORDER BY update_time DESC LIMIT 1;
+    </update>
+</mapper>

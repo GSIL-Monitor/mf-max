@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mryx.matrix.codeanalyzer.core.dao.ProjectCodeScanTaskDao">
+
+    <resultMap id="jobMap" type="com.mryx.matrix.codeanalyzer.domain.CodeScanResult">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="task_name" property="taskName" jdbcType="VARCHAR"/>
+        <result column="app_code" property="appCode" jdbcType="VARCHAR"/>
+        <result column="type_of_scan" property="typeOfScan" jdbcType="SMALLINT"/>
+        <result column="code_branch" property="codeBranch" jdbcType="VARCHAR"/>
+        <result column="manual_or_automatic" property="manualOrAutomatic" jdbcType="SMALLINT"/>
+        <result column="git_address" property="gitAddress" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="getCodeScanInfo" resultMap="jobMap">
+          SELECT git_address,code_branch,app_code,mode_of_scan,type_of_scan
+          FROM code_scan_result WHERE manual_or_automatic = 1
+    </select>
+
+    <insert id="insertCodeScanJob" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanJob">
+        INSERT INTO code_scan_job
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="jobName != null">job_name,</if>
+            <if test="gitAddress != null">git_address,</if>
+            <if test="codeBranch != null">code_branch,</if>
+            <if test="appCode != null">app_code,</if>
+            <if test="codeScanTime !=null">code_scan_time,</if>
+            <if test="jobStatus !=null">job_status,</if>
+            <if test="baseVersion !=null">base_version,</if>
+            <if test="compareVersion !=null">compare_version,</if>
+            <if test="timeTrigger !=null">time_trigger,</if>
+            <if test="userName !=null">user_name,</if>
+            <if test="modifyUserName !=null">modify_user_name,</if>
+            <if test="typeOfScan != null">type_of_scan,</if>
+            <if test="modeOfScan != null">mode_of_scan,</if>
+            <if test="health != null">health,</if>
+            <if test="problem != null">problem,</if>
+            <if test="codeLine != null">code_line,</if>
+            <if test="duplicateLine != null">duplicate_line,</if>
+            <if test="runUserName != null">run_user_name,</if>
+            <if test="createTime !=null">create_time,</if>
+            <if test="updateTime !=null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">#{id,jdbcType=INTEGER},</if>
+            <if test="jobName!=null">#{jobName,jdbcType=VARCHAR},</if>
+            <if test="gitAddress!=null">#{gitAddress,jdbcType=VARCHAR},</if>
+            <if test="codeBranch!=null">#{codeBranch,jdbcType=VARCHAR},</if>
+            <if test="appCode!=null">#{appCode,jdbcType=VARCHAR},</if>
+            <if test="codeScanTime!=null">#{codeScanTime,jdbcType=TIMESTAMP},</if>
+            <if test="jobStatus!=null">#{jobStatus,jdbcType=INTEGER},</if>
+            <if test="baseVersion!=null">#{baseVersion,jdbcType=VARCHAR},</if>
+            <if test="compareVersion!=null">#{compareVersion,jdbcType=VARCHAR},</if>
+            <if test="timeTrigger!=null">#{timeTrigger,jdbcType=VARCHAR},</if>
+            <if test="userName!=null">#{userName,jdbcType=VARCHAR},</if>
+            <if test="modifyUserName!=null">#{modifyUserName,jdbcType=VARCHAR},</if>
+            <if test="typeOfScan!=null">#{typeOfScan,jdbcType=INTEGER},</if>
+            <if test="modeOfScan!=null">#{modeOfScan,jdbcType=INTEGER},</if>
+            <if test="health!=null">#{health,jdbcType=INTEGER},</if>
+            <if test="problem!=null">#{problem,jdbcType=INTEGER},</if>
+            <if test="codeLine!=null">#{codeLine,jdbcType=INTEGER},</if>
+            <if test="duplicateLine!=null">#{duplicateLine,jdbcType=INTEGER},</if>
+            <if test="runUserName!=null">#{runUserName,jdbcType=VARCHAR},</if>
+            <if test="createTime!=null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime!=null">#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertProjectCodeScanTask" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanResult">
+        INSERT INTO code_scan_result
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="taskName != null">task_name,</if>
+            <if test="appCode != null">app_code,</if>
+            <if test="typeOfScan != null">type_of_scan,</if>
+            <if test="modeOfScan != null">mode_of_scan,</if>
+            <if test="gitAddress != null">git_address,</if>
+            <if test="codeBranch != null">code_branch,</if>
+            <if test="baseVersion !=null">base_version,</if>
+            <if test="compareVersion !=null">compare_version,</if>
+            <if test="timeTrigger !=null">time_trigger,</if>
+            <if test="userName !=null">user_name,</if>
+            <if test="status !=null">status,</if>
+            <if test="isMaster !=null">is_master,</if>
+            <if test="manualOrAutomatic != null">manual_or_automatic,</if>
+            <if test="codeScanTime !=null">code_scan_time,</if>
+            <if test="createTime !=null">create_time,</if>
+            <if test="updateTime !=null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">#{id,jdbcType=INTEGER},</if>
+            <if test="taskId!=null">#{taskId,jdbcType=INTEGER},</if>
+            <if test="taskName!=null">#{taskName,jdbcType=VARCHAR},</if>
+            <if test="appCode!=null">#{appCode,jdbcType=VARCHAR},</if>
+            <if test="typeOfScan!=null">#{typeOfScan,jdbcType=INTEGER},</if>
+            <if test="modeOfScan!=null">#{modeOfScan,jdbcType=INTEGER},</if>
+            <if test="gitAddress!=null">#{gitAddress,jdbcType=VARCHAR},</if>
+            <if test="codeBranch!=null">#{codeBranch,jdbcType=VARCHAR},</if>
+            <if test="baseVersion!=null">#{baseVersion,jdbcType=VARCHAR},</if>
+            <if test="compareVersion!=null">#{compareVersion,jdbcType=VARCHAR},</if>
+            <if test="timeTrigger!=null">#{timeTrigger,jdbcType=VARCHAR},</if>
+            <if test="userName!=null">#{userName,jdbcType=VARCHAR},</if>
+            <if test="status!=null">#{status,jdbcType=INTEGER},</if>
+            <if test="isMaster!=null">#{isMaster,jdbcType=INTEGER},</if>
+            <if test="manualOrAutomatic!=null">#{manualOrAutomatic,jdbcType=INTEGER},</if>
+            <if test="codeScanTime!=null">#{codeScanTime,jdbcType=TIMESTAMP},</if>
+            <if test="createTime!=null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime!=null">#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+
+    <select id="getIdByAppCode" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanResult"
+            resultType="java.lang.Integer">
+                SELECT id FROM code_scan_result WHERE app_code = #{appCode,jdbcType=VARCHAR} ORDER BY update_time DESC LIMIT 1;
+    </select>
+
+    <select id="getJobIdByAppCode" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanJob"
+            resultType="java.lang.Integer">
+                SELECT id FROM code_scan_job WHERE app_code = #{appCode,jdbcType=VARCHAR} ORDER BY update_time DESC LIMIT 1;
+    </select>
+
+    <sql id="conditions">
+        <if test="id != null ">and id = #{id,jdbcType=INTEGER}</if>
+        <if test="taskName != null and taskName != '' ">and task_name like '%${taskName}%'</if>
+        <if test="appCode != null and appCode != '' ">and app_code like '%${appCode}%'</if>
+        <if test="typeOfScan != null ">and type_of_scan = #{typeOfScan,jdbcType=INTEGER}</if>
+        <!--<if test="modeOfScan != null ">and mode_of_scan = #{modeOfScan,jdbcType=INTEGER}</if>-->
+    </sql>
+    <resultMap id="sonarMap" type="com.mryx.matrix.codeanalyzer.domain.CodeScanResult">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="task_name" property="taskName" jdbcType="VARCHAR"/>
+        <result column="app_code" property="appCode" jdbcType="VARCHAR"/>
+        <result column="type_of_scan" property="typeOfScan" jdbcType="SMALLINT"/>
+        <result column="mode_of_scan" property="modeOfScan" jdbcType="SMALLINT"/>
+        <result column="code_branch" property="codeBranch" jdbcType="VARCHAR"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="blocker" property="blocker" jdbcType="INTEGER"/>
+        <result column="critical" property="critical" jdbcType="INTEGER"/>
+        <result column="major" property="major" jdbcType="INTEGER"/>
+        <result column="minor" property="minor" jdbcType="INTEGER"/>
+        <result column="info" property="info" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="blocker_result_url" property="blockerResultUrl" jdbcType="VARCHAR"/>
+        <result column="critical_result_url" property="criticalResultUrl" jdbcType="VARCHAR"/>
+        <result column="major_result_url" property="majorResultUrl" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 分页查询 -->
+    <select id="getCodeScanTask" resultMap="sonarMap"
+            parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanResult">
+        SELECT
+        id,task_name,app_code,type_of_scan,mode_of_scan,code_branch,user_name,update_time,
+        blocker,critical,major,minor,info,status,blocker_result_url,critical_result_url,major_result_url
+        FROM code_scan_result WHERE manual_or_automatic != 0
+        <include refid="conditions"/>
+        ORDER BY id DESC
+        limit #{startOfPage},#{pageSize}
+    </select>
+
+    <!-- 分页查询总数 -->
+    <select id="pageTotal" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanResult"
+            resultType="java.lang.Integer">
+        SELECT count(*) FROM code_scan_result
+        WHERE manual_or_automatic != 0
+        <include refid="conditions"/>
+    </select>
+
+
+    <sql id="p3cConditions">
+        <if test="id != null ">and id = #{id,jdbcType=INTEGER}</if>
+        <if test="jobName != null and jobName != '' ">and task_name like '%${jobName}%'</if>
+        <if test="appCode != null and appCode != '' ">and app_code like '%${appCode}%'</if>
+        <if test="typeOfScan != null ">and type_of_scan = #{typeOfScan,jdbcType=INTEGER}</if>
+    </sql>
+
+    <resultMap id="p3cMap" type="com.mryx.matrix.codeanalyzer.domain.CodeScanJob">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="job_name" property="jobName" jdbcType="VARCHAR"/>
+        <result column="health" property="health" jdbcType="INTEGER"/>
+        <result column="problem" property="problem" jdbcType="INTEGER"/>
+        <result column="app_code" property="appCode" jdbcType="VARCHAR"/>
+        <result column="type_of_scan" property="typeOfScan" jdbcType="SMALLINT"/>
+        <result column="mode_of_scan" property="modeOfScan" jdbcType="SMALLINT"/>
+        <result column="code_branch" property="codeBranch" jdbcType="VARCHAR"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="modify_user_name" property="modifyUserName" jdbcType="VARCHAR"/>
+        <result column="run_user_name" property="runUserName" jdbcType="VARCHAR"/>
+        <result column="code_scan_time" property="codeScanTime" jdbcType="TIMESTAMP"/>
+        <result column="blocker" property="blocker" jdbcType="INTEGER"/>
+        <result column="critical" property="critical" jdbcType="INTEGER"/>
+        <result column="major" property="major" jdbcType="INTEGER"/>
+        <result column="minor" property="minor" jdbcType="INTEGER"/>
+        <result column="info" property="info" jdbcType="INTEGER"/>
+        <result column="job_status" property="jobStatus" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- p3c分页查询总数 -->
+    <select id="p3cTotal" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanJob"
+            resultType="java.lang.Integer">
+        SELECT count(*) FROM code_scan_job
+        WHERE deleted = 0
+        <include refid="p3cConditions"/>
+    </select>
+
+    <!-- p3c分页查询 -->
+    <select id="getCodeScanJob" resultMap="p3cMap"
+            parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanJob">
+        SELECT
+        id,job_name,health,problem,app_code,type_of_scan,mode_of_scan,code_branch,user_name,modify_user_name,run_user_name,code_scan_time,
+        blocker,critical,major,minor,info,job_status
+        FROM code_scan_job WHERE deleted = 0
+        <include refid="p3cConditions"/>
+        ORDER BY id DESC
+        limit #{startOfPage},#{pageSize}
+    </select>
+
+    <update id="updateProjectCodeScanTask" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanResult">
+        UPDATE code_scan_result
+        <set>
+            <if test="userName != null">user_name = #{userName,jdbcType=VARCHAR},</if>
+            <if test="status!=null">status = #{status,jdbcType=INTEGER},</if>
+            <if test="codeScanTime!=null">code_scan_time = #{codeScanTime,jdbcType=TIMESTAMP},</if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <insert id="insertCodeScanJobRecord" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanJobRecord">
+        INSERT INTO code_scan_job_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="jobId != null">job_id,</if>
+            <if test="blocker != null">blocker,</if>
+            <if test="critical != null">critical,</if>
+            <if test="major != null">major,</if>
+            <if test="minor != null">minor,</if>
+            <if test="info != null">info,</if>
+            <if test="jobStatus != null">job_status,</if>
+            <if test="typeOfScan != null">type_of_scan,</if>
+            <if test="codeScanTime !=null">code_scan_time,</if>
+            <if test="runUserName !=null">run_user_name,</if>
+            <if test="manualOrAutomatic !=null">manual_or_automatic,</if>
+            <if test="createTime !=null">create_time,</if>
+            <if test="updateTime !=null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">#{id,jdbcType=INTEGER},</if>
+            <if test="jobId!=null">#{jobId,jdbcType=INTEGER},</if>
+            <if test="blocker!=null">#{blocker,jdbcType=INTEGER},</if>
+            <if test="critical!=null">#{critical,jdbcType=INTEGER},</if>
+            <if test="major!=null">#{major,jdbcType=INTEGER},</if>
+            <if test="minor!=null">#{minor,jdbcType=INTEGER},</if>
+            <if test="info!=null">#{info,jdbcType=INTEGER},</if>
+            <if test="jobStatus!=null">#{jobStatus,jdbcType=INTEGER},</if>
+            <if test="typeOfScan!=null">#{typeOfScan,jdbcType=INTEGER},</if>
+            <if test="codeScanTime!=null">#{codeScanTime,jdbcType=TIMESTAMP},</if>
+            <if test="runUserName!=null">#{runUserName,jdbcType=VARCHAR},</if>
+            <if test="manualOrAutomatic!=null">#{manualOrAutomatic,jdbcType=INTEGER},</if>
+            <if test="createTime!=null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime!=null">#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+
+    <select id="getRecordIdByJobId" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanJobRecord"
+            resultType="java.lang.Integer">
+            SELECT id FROM code_scan_job_record WHERE job_id = #{jobId,jdbcType=INTEGER} ORDER BY update_time DESC LIMIT 1;
+    </select>
+
+    <update id="updateCodeScanJob" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanJob">
+        UPDATE code_scan_job
+        <set>
+            <if test="blocker != null">blocker = #{blocker,jdbcType=INTEGER},</if>
+            <if test="critical != null">critical = #{critical,jdbcType=INTEGER},</if>
+            <if test="major != null">major = #{major,jdbcType=INTEGER},</if>
+            <if test="minor != null">minor = #{minor,jdbcType=INTEGER},</if>
+            <if test="info != null">info = #{info,jdbcType=INTEGER},</if>
+            <if test="health != null">health = #{health,jdbcType=INTEGER},</if>
+            <if test="problem != null">problem = #{problem,jdbcType=INTEGER},</if>
+            <if test="codeScanTime != null">code_scan_time = #{codeScanTime,jdbcType=TIMESTAMP},</if>
+            <if test="jobStatus != null">job_status = #{jobStatus,jdbcType=INTEGER},</if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="saveCodeScanJob" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanJob">
+        UPDATE code_scan_job
+        <set>
+            <if test="jobName != null">job_name = #{jobName,jdbcType=VARCHAR},</if>
+            <if test="modifyUserName != null">modify_user_name = #{modifyUserName,jdbcType=INTEGER},</if>
+            <if test="timeTrigger != null">time_trigger = #{timeTrigger,jdbcType=INTEGER},</if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateCodeScanJobRecord" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanJobRecord">
+        UPDATE code_scan_job_record
+        <set>
+            <if test="blocker != null">blocker = #{blocker,jdbcType=INTEGER},</if>
+            <if test="critical != null">critical = #{critical,jdbcType=INTEGER},</if>
+            <if test="major != null">major = #{major,jdbcType=INTEGER},</if>
+            <if test="minor != null">minor = #{minor,jdbcType=INTEGER},</if>
+            <if test="info != null">info = #{info,jdbcType=INTEGER},</if>
+            <if test="codeScanTime != null">code_scan_time = #{codeScanTime,jdbcType=TIMESTAMP},</if>
+            <if test="jobStatus != null">job_status = #{jobStatus,jdbcType=INTEGER},</if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="getCodeScanJobByJobId" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanJob"
+            resultMap="p3cMap">
+        SELECT
+        id,job_name,app_code,type_of_scan,mode_of_scan,code_branch,user_name,code_scan_time,
+        blocker,critical,major,minor,info,job_status
+        FROM code_scan_job WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <update id="updateP3cDeletedStatus" parameterType="com.mryx.matrix.codeanalyzer.domain.CodeScanJob">
+        UPDATE code_scan_job
+        <set>
+            <if test="deleted != null">deleted = #{deleted,jdbcType=INTEGER},</if>
+            <if test="deleteUserName != null">delete_user_name = #{deleteUserName,jdbcType=VARCHAR},</if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

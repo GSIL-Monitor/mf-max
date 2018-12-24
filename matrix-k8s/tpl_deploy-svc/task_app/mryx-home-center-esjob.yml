@@ -1,0 +1,123 @@
+#######################################################
+# task任务，注释掉，不再上docker
+# 使用说明
+# 1. 所有mryx-home-center-esjob使用应用中心的app_code进行替换
+# 2. Golang工程，需要根据工程的端口，维护containerPort和targetPort为该应用的指定启动端口
+# 3. 日志收集
+#   - 需要将XXXXX替换为实际的日志目录，最终需要确保/data/logs/XXXXX目录下为日志文件
+#   - 对于前端工程，将/data/logs/XXXXX替换为/var/log/nginx
+# 4. service.spec.type 默认为ClusterIP, 如果需要对外暴露http服务，改成NodePort
+# 5. 配置mysql, mq等测试环境，通过host将域名转为对应的ip完成连接
+#   - 如果测试环境，一台主机，多个端口，通过控制端口和环境的映射关系，完成转换，例如33061对应b1, 33062对应b2
+# 6. 如果properties中有额外的环境变量需要替换，添加到deployment.spec.template.spec.container.env节点下
+# 7. 如果Dockerfile提供的启动命令无法满足需要，在spec.template.spec.container.name.command这里使用自定义启动命令
+#   - 对于需要注册eureka服务的应用，将默认启动端口指定为80， 并且同时修改containerPort和targetPort为80
+# other: DEPLOY_ENV, ZK_ADDR_ENV不要修改，部署指定环境时，会自动进行替换
+#######################################################
+apiVersion: extensions/v1beta1 ## 稳定的版本，这里不要改动
+kind: Deployment ## 用于启动服务
+metadata:
+  name: mryx-home-center-esjob # 变量 -应用中心的名字
+  namespace: DEPLOY_ENV # 变量 -根据命名规范进行替换，例如d1, b1等
+  labels:
+    app: mryx-home-center-esjob # 变量 -应用中心的名字
+spec:
+  replicas: 1 ## 默认启动一个pod, 降低资源消耗
+  minReadySeconds: 10   ## 滚动升级时10s后认为该pod就绪
+  revisionHistoryLimit: 5
+  strategy:
+    rollingUpdate:  ## 由于replicas为3,则整个升级,pod个数在2-4个之间
+      maxSurge: 1      ## 滚动升级时会先启动1个pod
+      maxUnavailable: 1 ## 滚动升级时允许的最大Unavailable的pod个数
+  template:
+    metadata:
+      labels:
+        app: mryx-home-center-esjob ## 变量 -应用中心的名字
+    spec:
+      terminationGracePeriodSeconds: 60 ##k8s将会给应用发送SIGTERM信号，可以用来正确、优雅地关闭应用,默认为30秒
+      imagePullSecrets: ## 腾讯云上访问私有仓库使用的secret，不需修改
+      - name: registry-secret
+      - name: qcloudregistrykey
+      - name: tencenthubkey
+      containers:
+      - image: harbor.missfresh.net/library/filebeat:5.4.0
+        imagePullPolicy: Always
+        name: filebeat
+        volumeMounts:
+        - name: app-logs
+          mountPath: /log
+        - name: filebeat-config
+          mountPath: /etc/filebeat/
+      - name: mryx-home-center-esjob # 变量 -应用中心的名字
+        image: harbor.missfresh.net/testing/mryx-home-center-esjob:master ## 变量 - 私服地址/testing/应用名:分支名
+        imagePullPolicy: Always ## default: IfNotPresent, 使用Always确保拉取最新的镜像
+#        command: ["java", "-jar", "/data/app/xxxx.jar", "--spring.profiles.active=autotest", "--server.port=80"] # 如果Dockerfile提供的启动命令无法满足需要，在这里使用自定义启动命令
+        resources:
+          ## keep request = limit to keep this container in guaranteed class
+          requests: ## 资源分配，默认CPU 1核，内存 512MB~4GB
+            cpu: "250m"
+            memory: 512Mi
+          limits:
+            cpu: "500m"
+            memory: 2Gi
+        terminationMessagePath: /dev/termination-log
+        volumeMounts: ## 用于保证pod和宿主机的时间一致
+        - mountPath: /etc/localtime
+          name: tz-config
+          readOnly: true
+          ## 需要将XXXXX替换为实际的日志目录，最终需要确保/data/logs/XXXXX目录下为日志文件
+          ## 对于前端工程，将/data/logs/XXXXX替换为/var/log/nginx
+        - mountPath: /data/logs/home-center-esjob
+          name: app-logs
+        env: # 变量，用于替换配置文件中的系统变量
+          - name: NGINX_ENV ## 环境信息，properties中使用，wiki: http://wiki.missfresh.net/pages/viewpage.action?pageId=37336541
+            value: "DEPLOY_ENV" # 变量， 根据规范替换为,b1,b2, d1,d2等
+          - name: ZK_ADDR ## zk地址信息，properties中使用, wiki: http://wiki.missfresh.net/pages/viewpage.action?pageId=37336541
+            value: "ZK_ADDR_ENV" # 变量，用于替换不同环境的zk地址
+          - name: REDIS_CLUSTER ## redis集群信息，properties中使用, wiki: http://wiki.missfresh.net/pages/viewpage.action?pageId=37336541
+            value: "REDIS_CLUSTER_ENV" # 变量，用于替换不同环境的redis集群
+          - name: ENV_NUM # 变量，根据环境，替换为对应的数字, 大于10如何处理
+            value: "VAR_ENV_NUM"
+        ports:
+          - name: http
+            containerPort: 8080 ## 容器使用的端口，默认一律使用8080
+      restartPolicy: Always
+      securityContext: {}
+      serviceAccountName: ""
+      volumes:
+      - hostPath: ## 用于保证pod和宿主机的时间一致
+          path: /usr/share/zoneinfo/Asia/Shanghai
+        name: tz-config
+      - name: app-logs
+        emptyDir: {}
+      - name: filebeat-config
+        configMap:
+          name: filebeat-config
+---
+kind: Service ## 创立service, 用于暴露服务
+apiVersion: v1
+metadata:
+  name: mryx-home-center-esjob # 变量 -应用中心的名字
+  namespace: DEPLOY_ENV ## 变量 -根据命名规范进行替换，例如d1, b1等
+  labels:
+    app: mryx-home-center-esjob ## 变量 -应用中心的名字
+spec:
+  type: NodePort #变量 可选项NodePort 使用ClusterIP方式。如果需要对外暴露服务，需要使用NodePort
+  ports:
+  - port: 80 ## 容器之间访问的端口（通过应用中心获取），容器内可以使用 serviceName.namespaceName:clusterPort, e.g. helloworld.testing:80, 80端口可忽略使用helloworld.testing直接访问对应应用
+    targetPort: 8080 ## 容器自身启动使用端口
+    protocol: TCP
+  selector:
+    app: mryx-home-center-esjob # 变量 -应用中心的名字
+# 用于访问外部的b1-db
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: mryx-home-center-esjob-db
+  namespace: b1
+spec:
+  type: ExternalName
+  externalName: 127.0.0.1
+  ports:
+  - port: 80

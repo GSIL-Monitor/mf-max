@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+   name: kibana-ingress
+   namespace: default                         #要与 kibana 服务处于同一个 namespace
+spec:
+   rules:
+   - http:
+       paths:
+       - path: /
+         backend:
+           serviceName: kibana                    #输入 kibana 服务的名称
+           servicePort: 80                        #输入 kibana 服务暴露的端口
